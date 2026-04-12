@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 225b5939a97b8cc4cac5f27000db75c0, type: 3}
+  m_Name: EnemyDatabase
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyDatabase
+  skeletonMinion: {fileID: 11400000, guid: dc5563c1d69229046984743ee5f3a82a, type: 2}
+  skeletonWarrior: {fileID: 11400000, guid: 40969155767873741a776aeb99d3743c, type: 2}
+  skeletonKnight: {fileID: 11400000, guid: 03d112c370c15914ab1a3378a78b23d3, type: 2}
+  skeletonRogue: {fileID: 11400000, guid: ca42bc7804d4b8d4ebded8f335868f74, type: 2}
+  skeletonMage: {fileID: 11400000, guid: 41273c55d8489a842b7b0a3724d28906, type: 2}
+  skeletonGolemAxe: {fileID: 11400000, guid: ee3de55357cc342479d9d11b227c5467, type: 2}
+  skeletonGolemMace: {fileID: 11400000, guid: 6fa2a75587f0db54db6e67a9b7d4ea4b, type: 2}
+  necromancer: {fileID: 11400000, guid: fafb1a6bb65bdda43a4fd075dedf830c, type: 2}

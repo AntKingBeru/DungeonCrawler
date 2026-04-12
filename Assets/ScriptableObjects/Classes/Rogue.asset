@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8bf4a284f3a12742966ee41915880ca, type: 3}
+  m_Name: Rogue
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterClassData
+  className: Rogue
+  description: 'A cunning assassin who thrives in the shadows.
+
+    The Rogue strikes
+    quickly and exploits enemy weaknesses with dirty tactics.'
+  icon: {fileID: -648769738, guid: 193e9a99bff7587449fcf98ec5955683, type: 3}
+  maxHealth: 90
+  maxMana: 50
+  damage: 17
+  movementSpeed: 6
+  modelPrefab: {fileID: 1028351359163093290, guid: a930d3ce6cc985c4d8c10bc53f39f1db, type: 3}
+  colorVariants:
+  - {fileID: 2100000, guid: 84eed479414a74b4fad05e2efa6c3182, type: 2}
+  - {fileID: 2100000, guid: 4dd30bacf933de44f9c0be0d0c621dcf, type: 2}
+  - {fileID: 2100000, guid: 2bcba507abc64e4439c9260697bdb7b9, type: 2}
+  - {fileID: 2100000, guid: 8d9a2cbc7cbb81245af09dd83b5c71fb, type: 2}
+  startingSkills:
+  - {fileID: 11400000, guid: 208acba9709a49046bf0c0c7cf936ea0, type: 2}
+  - {fileID: 11400000, guid: 0d9bb0b2132775147b4bdb51653f8b74, type: 2}
+  unlockableSkills:
+  - {fileID: 11400000, guid: baaff7961bf9f37478df8fa647ac75ef, type: 2}
+  - {fileID: 11400000, guid: f6537b4cfd1d8244faf1a436ee62120f, type: 2}
+  - {fileID: 11400000, guid: 2caa222691e83104d8c096f3dc6129d9, type: 2}

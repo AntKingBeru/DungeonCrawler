@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb7d8f1cc8723d449a5a979ff037f05e, type: 3}
+  m_Name: Golem_Axe
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  enemyName: Golem
+  type: 1
+  enemyPrefab: {fileID: 650595465655641336, guid: 9471691b8e8bc3f4b90c2e6da11719cf, type: 3}
+  maxHealth: 300
+  damage: 25
+  moveSpeed: 2.2
+  canSummon: 0
+  spawnAnimation: {fileID: 7400000, guid: 8ea0a9fa5c907ab489e76b3ec52262cf, type: 2}
+  spawnVFX: {fileID: 2302733523609059515, guid: c3fadce4add662247b21917e49453940, type: 3}
+  spawnDuration: 2
+  attackRange: 2
+  attackCooldown: 2
+  attackDamageMultiplier: 1
+  attackAnimation: {fileID: 7400000, guid: a18696d9c0752dc47a079ac5dcd41c85, type: 2}
+  attackDuration: 1

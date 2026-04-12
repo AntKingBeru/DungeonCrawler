@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98bfbcac449bc9f46bcd24ffa6041234, type: 3}
+  m_Name: ChainLightning
+  m_EditorClassIdentifier: Assembly-CSharp::SkillData
+  skillName: Chain Lightning
+  description: Unleash a blot of lightning that jumps between enemies, dealing damage
+    to each.
+  icon: {fileID: 678996127, guid: 931927bbe0f21ec41bef5085c6ddd11d, type: 3}
+  type: 0
+  targetType: 3
+  cooldown: 7
+  manaCost: 22
+  damageMultiplier: 1.3
+  range: 6
+  radius: 0
+  maxTargets: 4
+  castVFX: {fileID: 0}
+  hitVFX: {fileID: 0}

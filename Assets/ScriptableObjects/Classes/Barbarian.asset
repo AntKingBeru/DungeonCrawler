@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8bf4a284f3a12742966ee41915880ca, type: 3}
+  m_Name: Barbarian
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterClassData
+  className: Barbarian
+  description: 'A relentless frontline warrior who thrives in chaos.
+
+    The Barbarian
+    taps into primal rage to shrug off damage and charge through enemies with unstoppable
+    force.'
+  icon: {fileID: -1853238679, guid: 193e9a99bff7587449fcf98ec5955683, type: 3}
+  maxHealth: 160
+  maxMana: 20
+  damage: 18
+  movementSpeed: 4.5
+  modelPrefab: {fileID: 1368171015498196149, guid: c01b02a208815e74e884bd0b95cb610e, type: 3}
+  colorVariants:
+  - {fileID: 2100000, guid: 86dadf6ab13504647b383ec7c6559ece, type: 2}
+  - {fileID: 2100000, guid: f4f3861a0f45a0f4888515ea767b3af4, type: 2}
+  - {fileID: 2100000, guid: 6a082df4f28feb7429c83131ebaf94ba, type: 2}
+  - {fileID: 2100000, guid: fe55f41f4ae369046a3b03477b5f25b9, type: 2}
+  startingSkills:
+  - {fileID: 11400000, guid: c5b173448df0cb948a9c04573e2dbea9, type: 2}
+  - {fileID: 11400000, guid: 9bc67bb2e7897c54c81282c33fcd6d1d, type: 2}
+  unlockableSkills:
+  - {fileID: 11400000, guid: 4d4f0cd5b9a11d04289f2ff953c41237, type: 2}
+  - {fileID: 11400000, guid: eae4b3e082786d548b6ee311152eed34, type: 2}
+  - {fileID: 11400000, guid: 45829b12d0d3ecc4f9544f6a15299c02, type: 2}

@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c61e59a450901114cb0c2a732fa2d4ca, type: 3}
+  m_Name: RoomDatabase
+  m_EditorClassIdentifier: Assembly-CSharp::RoomDatabase
+  startRoom: {fileID: 6453245480877199418, guid: b0c031925b6418843a13a6a9cdf93cb1, type: 3}
+  normalRoom: {fileID: 6453245480877199418, guid: b0c031925b6418843a13a6a9cdf93cb1, type: 3}
+  bossRoom: {fileID: 6453245480877199418, guid: b0c031925b6418843a13a6a9cdf93cb1, type: 3}
+  rewardRoom: {fileID: 6453245480877199418, guid: b0c031925b6418843a13a6a9cdf93cb1, type: 3}
