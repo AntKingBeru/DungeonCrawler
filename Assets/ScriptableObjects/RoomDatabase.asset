@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c61e59a450901114cb0c2a732fa2d4ca, type: 3}
   m_Name: RoomDatabase
   m_EditorClassIdentifier: Assembly-CSharp::RoomDatabase
-  startRoom: {fileID: 6453245480877199418, guid: b0c031925b6418843a13a6a9cdf93cb1, type: 3}
+  startRoom: {fileID: 1085127907826701922, guid: 355878a7ac6cc234e92780548a68f3db, type: 3}
   normalRoom: {fileID: 6453245480877199418, guid: b0c031925b6418843a13a6a9cdf93cb1, type: 3}
   bossRoom: {fileID: 6453245480877199418, guid: b0c031925b6418843a13a6a9cdf93cb1, type: 3}
   rewardRoom: {fileID: 6453245480877199418, guid: b0c031925b6418843a13a6a9cdf93cb1, type: 3}
