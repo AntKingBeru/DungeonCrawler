@@ -10,6 +10,8 @@ public class PartyFollower : MonoBehaviour
     [Header("Movement")]
     [SerializeField] private float followSpeed = 4f;
     [SerializeField] private float rotationSpeed = 10f;
+    [SerializeField] private float gravity = -9.81f;
+    [SerializeField] private float groundForce = -2f;
     
     [Header("Animation")]
     private Animator _animator;
@@ -18,6 +20,7 @@ public class PartyFollower : MonoBehaviour
     private Transform _leader;
     private Vector3 _offset;
     private Vector3 _lastPosition;
+    private float _verticalVelocity;
 
     public void Initialize(CharacterSelectionData data, Transform leader, int index)
     {
@@ -52,15 +55,26 @@ public class PartyFollower : MonoBehaviour
         
         var direction = desiredPosition - transform.position;
         var distance = direction.magnitude;
+        
+        if (controller.isGrounded && _verticalVelocity < 0f)
+            _verticalVelocity = groundForce;
+        
+        _verticalVelocity += gravity * Time.deltaTime;
 
         if (distance < 0.1f)
+        {
+            controller.Move(Vector3.up * _verticalVelocity * Time.deltaTime);
             return;
+        }
         
         var moveDir = direction.normalized;
         var speedMultiplier = Mathf.Clamp01(distance);
         var moveSpeedScaled = followSpeed * speedMultiplier;
         
-        controller.Move(moveDir * moveSpeedScaled * Time.deltaTime);
+        var velocity = moveDir * moveSpeedScaled;
+        velocity.y = _verticalVelocity;
+        
+        controller.Move(velocity * Time.deltaTime);
         
         if (moveDir.sqrMagnitude > 0.01f)
         {

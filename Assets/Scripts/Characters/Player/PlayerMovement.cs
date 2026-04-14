@@ -9,6 +9,8 @@ public class PlayerMovement : MonoBehaviour
     [Header("Movement")]
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float rotationSpeed = 10f;
+    [SerializeField] private float gravity = -9.81f;
+    [SerializeField] private float groundForce = -2f;
     [SerializeField] private CharacterController controller;
     [SerializeField] private CharacterVisual visual;
     
@@ -17,6 +19,8 @@ public class PlayerMovement : MonoBehaviour
     private static readonly int SpeedHash = Animator.StringToHash("Speed");
     
     [SerializeField] private SkillController skillController;
+    
+    private float _verticalVelocity;
     
     private Transform _cameraTransform;
 
@@ -59,14 +63,25 @@ public class PlayerMovement : MonoBehaviour
         
         var moveDir = camForward.normalized * input.y + camRight.normalized * input.x;
         
-        controller.Move(moveDir * moveSpeed * Time.deltaTime);
+        if (controller.isGrounded && _verticalVelocity < 0f)
+            _verticalVelocity = groundForce;
         
-        var targetRotation = Quaternion.LookRotation(moveDir);
-        transform.rotation = Quaternion.Slerp(
-            transform.rotation,
-            targetRotation,
-            rotationSpeed * Time.deltaTime
-        );
+        _verticalVelocity += gravity * Time.deltaTime;
+
+        var velocity = moveDir * moveSpeed;
+        velocity.y = _verticalVelocity;
+        
+        controller.Move(velocity * Time.deltaTime);
+
+        if (moveDir.sqrMagnitude > 0.01f)
+        {
+            var targetRotation = Quaternion.LookRotation(moveDir);
+            transform.rotation = Quaternion.Slerp(
+                transform.rotation,
+                targetRotation,
+                rotationSpeed * Time.deltaTime
+            );
+        }
     }
 
     private void UpdateAnimation()

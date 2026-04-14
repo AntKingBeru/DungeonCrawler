@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using Unity.AI.Navigation;
 using System.Collections.Generic;
@@ -12,14 +13,33 @@ public class DungeonSpawner : MonoBehaviour
 
     private readonly Dictionary<Vector2Int, Room> _spawnedRooms = new();
 
+    private void Start()
+    {
+        navMesh.RemoveData();
+        navMesh.BuildNavMesh();
+    }
+    
     public void SpawnDungeon()
     {
-        var rooms = generator.Generate();
+        StartCoroutine(SpawnRoutine());
+    }
 
+    private IEnumerator SpawnRoutine()
+    {
+        foreach (var room in _spawnedRooms.Values)
+            Destroy(room.gameObject);
+        
+        _spawnedRooms.Clear();
+        
+        var rooms = generator.Generate();
+        
         foreach (var kvp in rooms)
             SpawnRoom(kvp.Value, rooms);
+
+        yield return null;
+        yield return null;
         
-        navMesh.BuildNavMesh();
+        navMesh.UpdateNavMesh(navMesh.navMeshData);
     }
 
     private void SpawnRoom(DungeonRoomNode node, Dictionary<Vector2Int, DungeonRoomNode> allRooms)
