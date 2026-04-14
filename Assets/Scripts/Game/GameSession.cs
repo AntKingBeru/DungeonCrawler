@@ -12,8 +12,11 @@ public class GameSession : MonoBehaviour
     public CharacterSelectionData[] Party { get; private set; } = new CharacterSelectionData[3];
     
     public FormationData Formation { get; set; }
+    public int BossesDefeated { get; private set; }
+    public int TotalBosses { get; private set; } = 3;
 
     public UnityEvent onDataUpdated;
+    public UnityEvent onBossProgressUpdated;
 
     private void Awake()
     {
@@ -36,12 +39,16 @@ public class GameSession : MonoBehaviour
     public void SetPlayer(CharacterSelectionData data)
     {
         Player = data;
+        Player.currentHealth = data.@class.maxHealth;
+        Player.currentMana = data.@class.maxMana;
         onDataUpdated?.Invoke();
     }
 
     public void SetPartyMember(int index, CharacterSelectionData data)
     {
         Party[index] = data;
+        Party[index].currentHealth = data.@class.maxHealth;
+        Party[index].currentMana = data.@class.maxMana;
         onDataUpdated?.Invoke();
     }
 
@@ -49,5 +56,11 @@ public class GameSession : MonoBehaviour
     {
         Formation = data;
         onDataUpdated?.Invoke();
+    }
+
+    public void RegisterBossKill()
+    {
+        BossesDefeated++;
+        onBossProgressUpdated?.Invoke();
     }
 }

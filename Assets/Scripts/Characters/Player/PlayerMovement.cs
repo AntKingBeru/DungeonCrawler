@@ -34,12 +34,12 @@ public class PlayerMovement : MonoBehaviour
         moveAction.action.Disable();
     }
 
-    public void Initialize(CharacterSelectionData data, Transform camTransform)
+    public void Initialize(CharacterSelectionData data, Transform camTransform, HotbarUI hotbarUI)
     {
         _cameraTransform = camTransform;
         visual.Initialize(data);
         _animator = visual.animator;
-        skillController.Initialize(data, _animator);
+        skillController.Initialize(data, hotbarUI, _animator);
     }
     
     private void Update()

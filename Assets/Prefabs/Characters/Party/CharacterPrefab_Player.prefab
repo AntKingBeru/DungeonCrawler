@@ -118,11 +118,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 253dbea92323b064f96069884ae013cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterVisual
---- !u!95 &2274400134784990249 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 3967080064588463884, guid: 0eb0525df28d6e74c8e0ff312c28de5e, type: 3}
-  m_PrefabInstance: {fileID: 2926685082697696037}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &6507096653313009219 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8273241697500751206, guid: 0eb0525df28d6e74c8e0ff312c28de5e, type: 3}
@@ -143,9 +138,10 @@ MonoBehaviour:
   moveAction: {fileID: -1649190040217985575, guid: 953121b49becc5d499870620befa5e9a, type: 3}
   moveSpeed: 5
   rotationSpeed: 10
+  gravity: -9.81
+  groundForce: -2
   controller: {fileID: 463089621665082403}
   visual: {fileID: 2093383085197167852}
-  animator: {fileID: 2274400134784990249}
   skillController: {fileID: 2896752953627124867}
 --- !u!114 &2896752953627124867
 MonoBehaviour:
@@ -168,8 +164,10 @@ MonoBehaviour:
   targetLayer:
     serializedVersion: 2
     m_Bits: 256
+  manaRegenPerSecond: 5
+  manaRegenDelay: 1.5
   maxHits: 32
-  animator: {fileID: 2274400134784990249}
+  hotbarUI: {fileID: 0}
   onSkillUsed:
     m_PersistentCalls:
       m_Calls: []

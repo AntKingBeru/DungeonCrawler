@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
 
 public class SkillController : MonoBehaviour
 {
@@ -11,8 +12,15 @@ public class SkillController : MonoBehaviour
     [SerializeField] private Transform castPoint;
     [SerializeField] private LayerMask targetLayer;
     
+    [Header("Mana Regen")]
+    [SerializeField] private float manaRegenPerSecond = 5f;
+    [SerializeField] private float manaRegenDelay = 1.5f;
+    
     [Header("Performance")]
     [SerializeField] private int maxHits = 32;
+    
+    [Header("UI")]
+    private HotbarUI _hotbarUI;
     
     [Header("Runtime")]
     private SkillRuntime[] _skills;
@@ -22,31 +30,56 @@ public class SkillController : MonoBehaviour
     private Animator _animator;
     private static readonly int AttackHash = Animator.StringToHash("Attack");
 
+    private int _currentTooltipIndex = -1;
+    private float _regenTimer;
+    
     private Collider[] _overlapBuffer;
     private RaycastHit[] _castBuffer;
     
     public UnityEvent<SkillRuntime> onSkillUsed;
 
-    public void Initialize(CharacterSelectionData data, Animator animator = null)
+    public void Initialize(CharacterSelectionData data, HotbarUI hotbar, Animator animator = null)
     {
         _data = data;
-        
+        _hotbarUI = hotbar;
         _animator = animator;
         
-        var skillCount = _data.@class.startingSkills.Length;
-
-        _skills = new SkillRuntime[skillCount];
-
-        for (var i = 0; i < skillCount; i++)
-        {
-            _skills[i] = new SkillRuntime
-            {
-                Data = _data.@class.startingSkills[i],
-            };
-        }
+        BuildSkills();
         
         _overlapBuffer = new Collider[maxHits];
         _castBuffer = new RaycastHit[maxHits];
+
+        _hotbarUI.Initialize(_skills);
+    }
+
+    private void BuildSkills()
+    {
+        var allSkills = new List<SkillData>(_data.@class.startingSkills);
+        
+        var active = new List<SkillData>();
+        var passive = new List<SkillData>();
+
+        foreach (var skill in allSkills)
+        {
+            if (skill.type == SkillType.Active)
+                active.Add(skill);
+            else
+                passive.Add(skill);
+        }
+        
+        var sorted = new List<SkillData>();
+        sorted.AddRange(active);
+        sorted.AddRange(passive);
+        
+        _skills = new SkillRuntime[sorted.Count];
+
+        for (var i = 0; i < sorted.Count; i++)
+        {
+            _skills[i] = new SkillRuntime
+            {
+                Data = sorted[i],
+            };
+        }
     }
 
     private void OnEnable()
@@ -65,6 +98,8 @@ public class SkillController : MonoBehaviour
     {
         TickCooldowns();
         HandleInput();
+        HandleManaRegen();
+        UpdateUI();
     }
     
     private void TickCooldowns()
@@ -79,16 +114,39 @@ public class SkillController : MonoBehaviour
         {
             if (i >= skillActions.Length)
                 continue;
+            
+            var action = skillActions[i].action;
 
-            if (skillActions[i].action.triggered)
+            if (action.IsPressed())
+                ShowTooltip(i);
+            else
+                HideTooltip(i);
+
+            if (action.WasPressedThisFrame())
                 TryUseSkill(i);
         }
     }
 
+    private void HandleManaRegen()
+    {
+        if (_data == null)
+            return;
+
+        _regenTimer += Time.deltaTime;
+
+        if (_regenTimer < manaRegenDelay)
+            return;
+
+        if (_data.currentMana >= _data.@class.maxMana)
+            return;
+        
+        _data.currentMana += manaRegenPerSecond * Time.deltaTime;
+        _data.currentMana = Mathf.Min(_data.currentMana, _data.@class.maxMana);
+    }
+    
     private void TryUseSkill(int index)
     {
         var skill = _skills[index];
-
         if (!skill.IsReady)
             return;
 
@@ -101,6 +159,8 @@ public class SkillController : MonoBehaviour
     private void UseSkill(SkillRuntime skill)
     {
         _data.currentMana -= skill.Data.manaCost;
+        _regenTimer = 0f;
+        
         skill.Trigger();
         ExecuteSkill(skill.Data);
         
@@ -109,7 +169,7 @@ public class SkillController : MonoBehaviour
         
         onSkillUsed?.Invoke(skill);
     }
-
+    
     private void ExecuteSkill(SkillData skill)
     {
         if (skill.castVFX)
@@ -126,7 +186,7 @@ public class SkillController : MonoBehaviour
                 break;
         }
     }
-
+    
     private void ExecuteSingleTarget(SkillData skill)
     {
         var hitCount = Physics.SphereCastNonAlloc(
@@ -167,7 +227,7 @@ public class SkillController : MonoBehaviour
                 DealDamage(skill, damageable, col.transform.position);
         }
     }
-
+    
     private void DealDamage(SkillData skill, IDamageable target, Vector3 hitPoint)
     {
         var damage = _data.@class.damage * skill.damageMultiplier;
@@ -176,5 +236,37 @@ public class SkillController : MonoBehaviour
         
         if (skill.hitVFX)
             Instantiate(skill.hitVFX, hitPoint, Quaternion.identity);
+    }
+
+    private void ShowTooltip(int index)
+    {
+        if (_currentTooltipIndex == index)
+            return;
+        
+        _currentTooltipIndex = index;
+        
+        if (TooltipUI.Instance)
+            TooltipUI.Instance.ShowAt(_skills[index].Data, _hotbarUI.GetSlot(index));
+    }
+
+    private void HideTooltip(int index)
+    {
+        if (_currentTooltipIndex != index)
+            return;
+
+        _currentTooltipIndex = -1;
+
+        TooltipUI.Instance?.Hide();
+    }
+    
+    private void UpdateUI()
+    {
+        _hotbarUI.UpdateCooldowns(_skills);
+
+        for (var i = 0; i < _skills.Length; i++)
+        {
+            var hasMana = _data.currentMana >= _skills[i].Data.manaCost;
+            _hotbarUI.SetAvailable(i, hasMana);
+        }
     }
 }

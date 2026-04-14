@@ -79,6 +79,7 @@ public class CharacterCreationController : MonoBehaviour
         var data = new CharacterSelectionData
         {
             @class = _currentClass,
+            currentMana = _currentClass.maxMana,
             colorIndex = _currentColorIndex,
             name = _currentName
         };

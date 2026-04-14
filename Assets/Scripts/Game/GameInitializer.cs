@@ -11,6 +11,8 @@ public class GameInitializer : MonoBehaviour
     
     [Header("Camera")]
     [SerializeField] private PlayerCameraController cam;
+    
+    [SerializeField] private HotbarUI hotbarUI;
 
     public static PlayerMovement PlayerInstance;
     public static PartyFollower[] PartyMembers = new PartyFollower[3];
@@ -33,7 +35,7 @@ public class GameInitializer : MonoBehaviour
         
         PlayerInstance = player;
         
-        player.Initialize(GameSession.Instance.Player, cam.transform);
+        player.Initialize(GameSession.Instance.Player, cam.transform, hotbarUI);
         cam.Initialize(player.transform);
 
         for (var i = 0; i < GameSession.Instance.Party.Length; i++)

@@ -16,6 +16,8 @@ public class TooltipUI : MonoBehaviour
     [Header("Input")]
     [SerializeField] private InputActionReference pointAction;
 
+    private bool _followCursor;
+
     private void Awake()
     {
         if (Instance && Instance != this)
@@ -40,6 +42,9 @@ public class TooltipUI : MonoBehaviour
 
     private void Update()
     {
+        if (!_followCursor)
+            return;
+        
         var screenPos = pointAction.action.ReadValue<Vector2>();
 
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
@@ -54,12 +59,39 @@ public class TooltipUI : MonoBehaviour
 
     public void Show(SkillData data)
     {
+        _followCursor = true;
+        
         nameText.text = data.skillName;
         descriptionText.text = data.description;
 
         statsText.text =
             $"Cooldown: {data.cooldown}s\n" +
             $"Mana: {data.manaCost}";
+        
+        root.gameObject.SetActive(true);
+    }
+
+    public void ShowAt(SkillData data, RectTransform target)
+    {
+        _followCursor = false;
+        
+        nameText.text = data.skillName;
+        descriptionText.text = data.description;
+        
+        statsText.text =
+            $"Cooldown: {data.cooldown}s\n" +
+            $"Mana: {data.manaCost}";
+
+        var worldPos = target.position;
+
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            root.parent as RectTransform,
+            RectTransformUtility.WorldToScreenPoint(null, worldPos),
+            null,
+            out var localPos
+        );
+        
+        root.anchoredPosition = localPos + offset;
         
         root.gameObject.SetActive(true);
     }
