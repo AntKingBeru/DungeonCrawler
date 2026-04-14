@@ -9,7 +9,7 @@ public class DoorPair : MonoBehaviour
     [SerializeField] private GameObject wall;
     
     [Header("Settings")]
-    [SerializeField] private float openAngle = 90f;
+    [SerializeField] private float openAngle = -90f;
     [SerializeField] private float speed = 5f;
     
     public GameObject Doorframe => doorframe;

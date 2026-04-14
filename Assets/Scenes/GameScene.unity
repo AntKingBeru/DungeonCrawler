@@ -2778,7 +2778,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Welcome to NecroCrypt!
+  m_text: Welcome to Necro Crypt
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0c44d07f7603c7c419a941cd1a7e5123, type: 2}
   m_sharedMaterial: {fileID: -9002231763997812503, guid: 0c44d07f7603c7c419a941cd1a7e5123, type: 2}
@@ -7229,11 +7229,12 @@ MonoBehaviour:
 
 
     Skills are numbered
-    1-4, so use these numbers to activate the skills.
+    1-4, so use these numbers to activate the skills, and interact with ''E''.
 
 
-    Escape will pause the
-    game and open the settings menu, from which you can change volume and video settings.
+    Escape
+    will pause the game and open the settings menu, from which you can change volume
+    and video settings.
 
 '
   m_isRightToLeft: 0
@@ -13040,7 +13041,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'This is where you adventure begins.
+  m_text: 'This is where your adventure begins.
 
     With the help of your party,
     defeat 3 bosses to win the game. Simple, right?
@@ -18021,7 +18022,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshSurface
   m_SerializedVersion: 0
   m_AgentTypeID: 0
-  m_CollectObjects: 3
+  m_CollectObjects: 0
   m_Size: {x: 10, y: 10, z: 10}
   m_Center: {x: 0, y: 2, z: 0}
   m_LayerMask:
