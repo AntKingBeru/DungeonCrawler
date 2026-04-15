@@ -1,3 +1,10 @@
+public enum EnemyAttackType
+{
+    Melee,
+    Ranged,
+    AoE
+}
+
 public enum EnemyState
 {
     Spawning,

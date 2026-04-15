@@ -12,13 +12,11 @@ public class SkillController : MonoBehaviour
     [Header("Setup")]
     [SerializeField] private Transform castPoint;
     [SerializeField] private LayerMask targetLayer;
+    [SerializeField] private SkillExecuter skillExecuter;
     
     [Header("Mana Regen")]
     [SerializeField] private float manaRegenPerSecond = 5f;
     [SerializeField] private float manaRegenDelay = 1.5f;
-    
-    [Header("Performance")]
-    [SerializeField] private int maxHits = 32;
     
     [Header("UI")]
     private HotbarUI _hotbarUI;
@@ -35,9 +33,6 @@ public class SkillController : MonoBehaviour
     private int _currentTooltipIndex = -1;
     private float _regenTimer;
     
-    private Collider[] _overlapBuffer;
-    private RaycastHit[] _castBuffer;
-    
     public UnityEvent<SkillRuntime> onSkillUsed;
 
     public void Initialize(CharacterSelectionData data, HotbarUI hotbar, Animator animator = null)
@@ -47,9 +42,6 @@ public class SkillController : MonoBehaviour
         _animator = animator;
         
         BuildSkills();
-        
-        _overlapBuffer = new Collider[maxHits];
-        _castBuffer = new RaycastHit[maxHits];
 
         _hotbarUI.Initialize(_skills);
         
@@ -157,7 +149,7 @@ public class SkillController : MonoBehaviour
         _data.SetMana(Mathf.Min(_data.currentMana, _data.@class.maxMana));
     }
     
-    private void TryUseSkill(int index)
+    public void TryUseSkill(int index)
     {
         var skill = _skills[index];
         if (!skill.IsReady)
@@ -175,80 +167,12 @@ public class SkillController : MonoBehaviour
         _regenTimer = 0f;
         
         skill.Trigger();
-        ExecuteSkill(skill.Data);
+        skillExecuter.Execute(skill.Data, _data);
         
         if (_animator)
             _animator.SetTrigger(AttackHash);
         
         onSkillUsed?.Invoke(skill);
-    }
-    
-    private void ExecuteSkill(SkillData skill)
-    {
-        if (skill.castVFX)
-            Instantiate(skill.castVFX, castPoint.position, Quaternion.identity);
-
-        switch (skill.targetType)
-        {
-            case SkillTargetType.SingleTarget:
-                ExecuteSingleTarget(skill);
-                break;
-
-            case SkillTargetType.Area:
-                ExecuteAoe(skill);
-                break;
-        }
-    }
-    
-    private void ExecuteSingleTarget(SkillData skill)
-    {
-        var hitCount = Physics.SphereCastNonAlloc(
-            castPoint.position,
-            0.5f,
-            transform.forward,
-            _castBuffer,
-            skill.range,
-            targetLayer
-        );
-
-        for (var i = 0; i < hitCount; i++)
-        {
-            var hit = _castBuffer[i];
-            
-            if (hit.collider.TryGetComponent<IDamageable>(out var damageable))
-            {
-                DealDamage(skill, damageable, hit.collider.transform.position);
-                return;
-            }
-        }
-    }
-
-    private void ExecuteAoe(SkillData skill)
-    {
-        var hitCount = Physics.OverlapSphereNonAlloc(
-            castPoint.position,
-            skill.radius,
-            _overlapBuffer,
-            targetLayer
-        );
-
-        for (var i = 0; i < hitCount; i++)
-        {
-            var col = _overlapBuffer[i];
-            
-            if (col.TryGetComponent<IDamageable>(out var damageable))
-                DealDamage(skill, damageable, col.transform.position);
-        }
-    }
-    
-    private void DealDamage(SkillData skill, IDamageable target, Vector3 hitPoint)
-    {
-        var damage = _data.@class.damage * skill.damageMultiplier;
-        
-        target.TakeDamage(damage);
-        
-        if (skill.hitVFX)
-            Instantiate(skill.hitVFX, hitPoint, Quaternion.identity);
     }
 
     private void ShowTooltip(int index)

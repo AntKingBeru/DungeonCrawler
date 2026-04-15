@@ -6,9 +6,9 @@ using System.Collections;
 public class Enemy : MonoBehaviour, IDamageable
 {
     [Header("References")]
-    [SerializeField] private NavMeshAgent agent;
+    [SerializeField] protected NavMeshAgent agent;
     
-    [SerializeField] private GameObject modelRoot;
+    [SerializeField] protected GameObject modelRoot;
     
     [Header("Runtime")]
     protected EnemyData Data;
@@ -16,16 +16,22 @@ public class Enemy : MonoBehaviour, IDamageable
     protected float CurrentHealth;
     
     [Header("Animation")]
-    [SerializeField] private Animator animator;
-    private static readonly int SpeedHash = Animator.StringToHash("Speed");
-    private static readonly int AttackHash = Animator.StringToHash("Attack");
-    private static readonly int HitHash = Animator.StringToHash("Hit");
-    private static readonly int DieHash = Animator.StringToHash("Die");
+    [SerializeField] protected Animator animator;
+    protected static readonly int SpeedHash = Animator.StringToHash("Speed");
+    protected static readonly int AttackHash = Animator.StringToHash("Attack");
+    protected static readonly int HitHash = Animator.StringToHash("Hit");
+    protected static readonly int DieHash = Animator.StringToHash("Die");
+    
+    [Header("Performance")]
+    [SerializeField] private LayerMask targetLayer;
+    [SerializeField] private int maxHits = 32;
     
     protected bool IsActive;
     protected bool IsAttacking;
 
-    private float _attackTimer;
+    protected float AttackTimer;
+    
+    private Collider[] _overlapBuffer;
 
     public UnityEvent<Enemy> onDeath;
     public UnityEvent<Enemy> onSpawnFinished;
@@ -39,6 +45,8 @@ public class Enemy : MonoBehaviour, IDamageable
         
         agent.speed = Data.moveSpeed;
         agent.enabled = false;
+        
+        _overlapBuffer = new Collider[maxHits];
 
         StartCoroutine(SpawnRoutine());
     }
@@ -74,7 +82,7 @@ public class Enemy : MonoBehaviour, IDamageable
         if (!IsActive || !Target)
             return;
         
-        _attackTimer -= Time.deltaTime;
+        AttackTimer -= Time.deltaTime;
         
         var distance = Vector3.Distance(transform.position, Target.position);
 
@@ -112,7 +120,7 @@ public class Enemy : MonoBehaviour, IDamageable
 
         LookAtTarget();
 
-        if (_attackTimer > 0f || IsAttacking)
+        if (AttackTimer > 0f || IsAttacking)
             return;
 
         StartCoroutine(AttackRoutine());
@@ -125,25 +133,75 @@ public class Enemy : MonoBehaviour, IDamageable
         if (animator && Data.attackAnimation)
             animator.SetTrigger(AttackHash);
 
-        yield return new WaitForSeconds(Data.attackDuration * 0.4f);
+        yield return new WaitForSeconds(Data.damageDelay);
 
-        DealDamage();
+        ExecuteAttack();
 
-        yield return new WaitForSeconds(Data.attackDuration * 0.6f);
+        yield return new WaitForSeconds(Data.attackDuration - Data.damageDelay);
 
-        _attackTimer = Data.attackCooldown;
+        AttackTimer = Data.attackCooldown;
         IsAttacking = false;
     }
 
-    protected virtual void DealDamage()
+    protected virtual void ExecuteAttack()
+    {
+        switch (Data.attackType)
+        {
+            case EnemyAttackType.Melee:
+                DoMeleeAttack();
+                break;
+            case EnemyAttackType.Ranged:
+                DoRangedAttack();
+                break;
+            case EnemyAttackType.AoE:
+                DoAoEAttack();
+                break;
+        }
+    }
+
+    protected virtual void DoMeleeAttack()
     {
         if (!Target)
             return;
 
+        if (Vector3.Distance(transform.position, Target.position) > Data.attackRange)
+            return;
+        
         if (Target.TryGetComponent(out IDamageable damageable))
+            damageable.TakeDamage(Data.attackDamage);
+    }
+
+    protected virtual void DoRangedAttack()
+    {
+        if (!Target || !Data.projectilePrefab)
+            return;
+
+        var dir = (Target.position - transform.position).normalized;
+
+        var proj = Instantiate(
+            Data.projectilePrefab,
+            transform.position + Vector3.up * 1.5f,
+            Quaternion.LookRotation(dir)
+        );
+        
+        proj.Initialize(Target, Data.attackDamage, Data.projectileSpeed);
+    }
+
+    protected virtual void DoAoEAttack()
+    {
+        var hitCount = Physics.OverlapSphereNonAlloc(
+            transform.position,
+            Data.aoeRadius,
+            _overlapBuffer,
+            targetLayer
+        );
+
+        for (var i = 0; i < hitCount; i++)
         {
-            var damage = Data.damage * Data.attackDamageMultiplier;
-            damageable.TakeDamage(damage);
+            var col = _overlapBuffer[i];
+            
+            if (col.TryGetComponent<IDamageable>(out var damageable))
+                damageable.TakeDamage(Data.attackDamage);
         }
     }
 
@@ -188,7 +246,13 @@ public class Enemy : MonoBehaviour, IDamageable
 
         if (animator)
             animator.SetTrigger(DieHash);
-        
+
+        StartCoroutine(DeathRoutine());
+    }
+
+    private IEnumerator DeathRoutine()
+    {
+        yield return new WaitForSeconds(2f);
         Destroy(gameObject);
     }
 }

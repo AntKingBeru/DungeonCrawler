@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class Necromancer : Enemy
 {
@@ -6,22 +7,45 @@ public class Necromancer : Enemy
     [SerializeField] private EnemyDatabase database;
     [SerializeField] private float summonInterval = 5f;
     
+    [Header("Ranged Attack")]
+    [SerializeField] private Projectile projectilePrefab;
+    [SerializeField] private float rangedDamage = 18f;
+    [SerializeField] private float rangedCooldown = 3.5f;
+    [SerializeField] private float rangedRange = 8f;
+    [SerializeField] private float projectileSpeed = 10f;
+    
     private float _summonTimer;
+    private float _rangedTimer;
 
     protected override void Update()
     {
-        base.Update();
-
         if (!IsActive || IsAttacking)
             return;
 
-        _summonTimer += Time.deltaTime;
+        AttackTimer -= Time.deltaTime;
+        _rangedTimer -= Time.deltaTime;
+        
+        var distance = Vector3.Distance(transform.position, Target.position);
 
-        if (_summonTimer >= summonInterval)
+        if (!IsAttacking && _summonTimer >= summonInterval)
         {
-            _summonTimer = 0f;
-            Summon();
+            _summonTimer += Time.deltaTime;
+
+            if (_summonTimer >= summonInterval)
+            {
+                _summonTimer = 0f;
+                Summon();
+            }
         }
+
+        if (distance <= Data.attackRange)
+            HandleAttack();
+        else if (distance <= rangedRange)
+            HandleRangedAttack();
+        else
+            HandleMovement();
+        
+        UpdateAnimation();
     }
 
     private void Summon()
@@ -30,13 +54,60 @@ public class Necromancer : Enemy
 
         var offset = Random.insideUnitSphere * 3f;
         offset.y = 0;
+        
+        var spawnPos = transform.position + offset;
 
         var enemy = Instantiate(
             data.enemyPrefab,
-            transform.position + offset,
+            spawnPos,
             Quaternion.identity
         );
 
         enemy.Initialize(data, Target);
+    }
+
+    private void HandleRangedAttack()
+    {
+        if (IsAttacking || _rangedTimer > 0f)
+            return;
+        
+        agent.isStopped = true;
+        
+        LookAtTarget();
+
+        StartCoroutine(RangedAttackRoutine());
+    }
+
+    private IEnumerator RangedAttackRoutine()
+    {
+        IsAttacking = true;
+        
+        if (animator && Data.attackAnimation)
+            animator.SetTrigger(AttackHash);
+        
+        yield return new WaitForSeconds(Data.damageDelay);
+
+        FireProjectile();
+        
+        yield return new WaitForSeconds(Data.attackDuration - Data.damageDelay);
+        
+        _rangedTimer = rangedCooldown;
+        IsAttacking = false;
+    }
+
+    private void FireProjectile()
+    {
+        if (!Target || !projectilePrefab)
+            return;
+
+        var dir = (Target.position - transform.position).normalized;
+
+        var proj = Instantiate(
+            projectilePrefab,
+            transform.position + Vector3.up * 1.5f,
+            Quaternion.LookRotation(dir)
+        );
+        
+        proj.Initialize(Target, rangedDamage, projectileSpeed);
     }
 }

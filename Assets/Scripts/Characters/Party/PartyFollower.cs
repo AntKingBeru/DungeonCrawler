@@ -1,20 +1,18 @@
 using UnityEngine;
 
-[RequireComponent( typeof(CharacterController))]
+[RequireComponent(typeof(CharacterController))]
 public class PartyFollower : MonoBehaviour
 {
-    [Header("Setup")]
-    [SerializeField] private CharacterController controller;
+    [Header("Setup")] [SerializeField] private CharacterController controller;
     [SerializeField] private CharacterVisual visual;
-    
-    [Header("Movement")]
-    [SerializeField] private float followSpeed = 4f;
+    [SerializeField] private PartyCombatController combatController;
+
+    [Header("Movement")] [SerializeField] private float followSpeed = 4f;
     [SerializeField] private float rotationSpeed = 10f;
     [SerializeField] private float gravity = -9.81f;
     [SerializeField] private float groundForce = -2f;
-    
-    [Header("Animation")]
-    private Animator _animator;
+
+    [Header("Animation")] private Animator _animator;
     private static readonly int SpeedHash = Animator.StringToHash("Speed");
 
     private Transform _leader;
@@ -27,13 +25,16 @@ public class PartyFollower : MonoBehaviour
         _leader = leader;
         visual.Initialize(data);
         _animator = visual.animator;
-        
+
         var formation = GameSession.Instance.Formation;
-        
+
         if (formation && formation.offsets.Length > index)
             _offset = formation.offsets[index];
         else
             _offset = Vector3.back * (index + 1);
+
+        combatController.Initialize(data, visual.animator);
+
     }
 
     private void Update()
@@ -46,19 +47,19 @@ public class PartyFollower : MonoBehaviour
     {
         if (!_leader)
             return;
-        
+
         var desiredPosition =
             _leader.position +
             _leader.forward * _offset.z +
-            _leader.right * _offset.x + 
+            _leader.right * _offset.x +
             Vector3.up * _offset.y;
-        
+
         var direction = desiredPosition - transform.position;
         var distance = direction.magnitude;
-        
+
         if (controller.isGrounded && _verticalVelocity < 0f)
             _verticalVelocity = groundForce;
-        
+
         _verticalVelocity += gravity * Time.deltaTime;
 
         if (distance < 0.1f)
@@ -66,16 +67,16 @@ public class PartyFollower : MonoBehaviour
             controller.Move(Vector3.up * _verticalVelocity * Time.deltaTime);
             return;
         }
-        
+
         var moveDir = direction.normalized;
         var speedMultiplier = Mathf.Clamp01(distance);
         var moveSpeedScaled = followSpeed * speedMultiplier;
-        
+
         var velocity = moveDir * moveSpeedScaled;
         velocity.y = _verticalVelocity;
-        
+
         controller.Move(velocity * Time.deltaTime);
-        
+
         if (moveDir.sqrMagnitude > 0.01f)
         {
             var targetRotation = Quaternion.LookRotation(moveDir);
@@ -86,8 +87,24 @@ public class PartyFollower : MonoBehaviour
             );
         }
     }
-    
-    private void UpdateAnimation()
+
+    public void TeleportToFormation()
+    {
+        if (!_leader)
+            return;
+        
+        var targetPos = 
+            _leader.position +
+            _leader.forward * _offset.z +
+            _leader.right * _offset.x +
+            Vector3.up * _offset.y;
+        
+        controller.enabled = false;
+        transform.position = targetPos;
+        controller.enabled = true;
+    }
+
+private void UpdateAnimation()
     {
         if (!_animator)
             return;

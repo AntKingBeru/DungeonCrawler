@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3259973551036919713
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1734088369252481908}
+  m_Layer: 0
+  m_Name: CastPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1734088369252481908
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3259973551036919713}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5392888468848555150}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4153113727875690708
 GameObject:
   m_ObjectHideFlags: 0
@@ -42,6 +73,7 @@ GameObject:
   - component: {fileID: 5392888468848555150}
   - component: {fileID: 3382367272967728902}
   - component: {fileID: 3859756682307211209}
+  - component: {fileID: 757696267567747718}
   m_Layer: 9
   m_Name: CharacterPrefab
   m_TagString: Untagged
@@ -63,6 +95,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 211909288404819805}
+  - {fileID: 1734088369252481908}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!143 &3382367272967728902
@@ -104,3 +137,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CharacterVisual
   modelRoot: {fileID: 211909288404819805}
   animator: {fileID: 0}
+--- !u!114 &757696267567747718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8273241697500751206}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b181f17db61311447b654a14095f1aab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkillExecuter
+  castPoint: {fileID: 1734088369252481908}
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  maxHits: 32

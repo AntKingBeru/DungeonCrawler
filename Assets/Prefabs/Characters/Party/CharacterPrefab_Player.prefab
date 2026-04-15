@@ -1,36 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &405442987474611332
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3498475286340548689}
-  m_Layer: 0
-  m_Name: CastPoint
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3498475286340548689
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 405442987474611332}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 7082701988468963243}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2926685082697696037
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -90,10 +59,7 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: -4624392847479793170, guid: 0eb0525df28d6e74c8e0ff312c28de5e, type: 3}
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 5392888468848555150, guid: 0eb0525df28d6e74c8e0ff312c28de5e, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3498475286340548689}
+    m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 8273241697500751206, guid: 0eb0525df28d6e74c8e0ff312c28de5e, type: 3}
       insertIndex: -1
@@ -118,6 +84,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 253dbea92323b064f96069884ae013cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterVisual
+--- !u!114 &2458486208110678435 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 757696267567747718, guid: 0eb0525df28d6e74c8e0ff312c28de5e, type: 3}
+  m_PrefabInstance: {fileID: 2926685082697696037}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6507096653313009219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b181f17db61311447b654a14095f1aab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkillExecuter
+--- !u!4 &3498475286340548689 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1734088369252481908, guid: 0eb0525df28d6e74c8e0ff312c28de5e, type: 3}
+  m_PrefabInstance: {fileID: 2926685082697696037}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &6507096653313009219 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8273241697500751206, guid: 0eb0525df28d6e74c8e0ff312c28de5e, type: 3}
@@ -160,19 +142,14 @@ MonoBehaviour:
   - {fileID: -4244590063405632997, guid: 953121b49becc5d499870620befa5e9a, type: 3}
   - {fileID: -4815699515723905823, guid: 953121b49becc5d499870620befa5e9a, type: 3}
   - {fileID: -6019676965208404814, guid: 953121b49becc5d499870620befa5e9a, type: 3}
+  holdThreshold: 0.5
   castPoint: {fileID: 3498475286340548689}
   targetLayer:
     serializedVersion: 2
     m_Bits: 256
+  skillExecuter: {fileID: 2458486208110678435}
   manaRegenPerSecond: 5
   manaRegenDelay: 1.5
-  maxHits: 32
-  hotbarUI: {fileID: 0}
   onSkillUsed:
     m_PersistentCalls:
       m_Calls: []
---- !u!4 &7082701988468963243 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5392888468848555150, guid: 0eb0525df28d6e74c8e0ff312c28de5e, type: 3}
-  m_PrefabInstance: {fileID: 2926685082697696037}
-  m_PrefabAsset: {fileID: 0}

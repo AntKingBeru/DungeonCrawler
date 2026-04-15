@@ -15,15 +15,19 @@ MonoBehaviour:
   enemyName: Necromancer
   type: 2
   enemyPrefab: {fileID: 1674612751684367322, guid: 1e593362f945fc04993a9b0af8c793b1, type: 3}
-  maxHealth: 500
-  damage: 12
+  maxHealth: 520
   moveSpeed: 2.5
   canSummon: 1
   spawnAnimation: {fileID: 7400000, guid: 9815b57c18d64414fb6d67ebd66ef7fa, type: 2}
   spawnVFX: {fileID: 8872997376316869517, guid: 31bce30e18a1c384fb348c252fbcdd24, type: 3}
   spawnDuration: 2.5
-  attackRange: 2
+  attackType: 0
+  attackDamage: 22
+  attackRange: 2.2
   attackCooldown: 2
-  attackDamageMultiplier: 1
+  damageDelay: 0.5
+  aoeRadius: 3
+  projectilePrefab: {fileID: 0}
+  projectileSpeed: 10
   attackAnimation: {fileID: 7400000, guid: cb0b49ac2d002bb4e8b49dea6e3ad278, type: 2}
-  attackDuration: 1
+  attackDuration: 1.2

@@ -15,15 +15,19 @@ MonoBehaviour:
   enemyName: Rogue
   type: 0
   enemyPrefab: {fileID: 8800542169449094716, guid: 22ccb405e4480554a8f68f9a5b95edc5, type: 3}
-  maxHealth: 50
-  damage: 12
-  moveSpeed: 4.5
+  maxHealth: 55
+  moveSpeed: 4.8
   canSummon: 0
   spawnAnimation: {fileID: 7400000, guid: e47a55bf925805d45a1230a7cec80653, type: 2}
   spawnVFX: {fileID: 525564822105975866, guid: 1c06f63f1a7dfb6469fce6c4ca77ff51, type: 3}
   spawnDuration: 1.2
-  attackRange: 2
-  attackCooldown: 2
-  attackDamageMultiplier: 1
+  attackType: 0
+  attackDamage: 20
+  attackRange: 1.6
+  attackCooldown: 1.8
+  damageDelay: 0.25
+  aoeRadius: 3
+  projectilePrefab: {fileID: 0}
+  projectileSpeed: 10
   attackAnimation: {fileID: 7400000, guid: 2cf163398f78750459d4237af5a0c95c, type: 2}
-  attackDuration: 1
+  attackDuration: 0.9

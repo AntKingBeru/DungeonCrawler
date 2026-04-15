@@ -15,15 +15,19 @@ MonoBehaviour:
   enemyName: Golem
   type: 1
   enemyPrefab: {fileID: 3651891064917805016, guid: b21a60f6031cf194ba6762522410efcf, type: 3}
-  maxHealth: 350
-  damage: 12
-  moveSpeed: 2
+  maxHealth: 360
+  moveSpeed: 1.9
   canSummon: 0
   spawnAnimation: {fileID: 7400000, guid: 8ea0a9fa5c907ab489e76b3ec52262cf, type: 2}
   spawnVFX: {fileID: 2302733523609059515, guid: c3fadce4add662247b21917e49453940, type: 3}
   spawnDuration: 2
+  attackType: 2
+  attackDamage: 35
   attackRange: 2
-  attackCooldown: 2
-  attackDamageMultiplier: 1
+  attackCooldown: 3.5
+  damageDelay: 0.9
+  aoeRadius: 4
+  projectilePrefab: {fileID: 0}
+  projectileSpeed: 10
   attackAnimation: {fileID: 7400000, guid: a18696d9c0752dc47a079ac5dcd41c85, type: 2}
-  attackDuration: 1
+  attackDuration: 1.8

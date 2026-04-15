@@ -12,7 +12,6 @@ public class EnemyData : ScriptableObject
     
     [Header("Stats")]
     public float maxHealth;
-    public float damage;
     public float moveSpeed;
     
     [Header("Behavior")]
@@ -24,9 +23,16 @@ public class EnemyData : ScriptableObject
     public float spawnDuration = 1.5f;
     
     [Header("Combat")]
+    public EnemyAttackType attackType;
+    public float attackDamage;
     public float attackRange = 2f;
     public float attackCooldown = 2f;
-    public float attackDamageMultiplier = 1f;
+    public float damageDelay = 0.4f;
+    public float aoeRadius = 3f;
+    
+    [Header("Ranged")]
+    public Projectile projectilePrefab;
+    public float projectileSpeed = 10f;
     
     [Header("Animation")]
     public AnimationClip attackAnimation;

@@ -60,6 +60,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8273241697500751206, guid: 0eb0525df28d6e74c8e0ff312c28de5e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 434931513523913364}
+    - targetCorrespondingSourceObject: {fileID: 8273241697500751206, guid: 0eb0525df28d6e74c8e0ff312c28de5e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -3156634534385849318}
+    - targetCorrespondingSourceObject: {fileID: 8273241697500751206, guid: 0eb0525df28d6e74c8e0ff312c28de5e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5065046670168482810}
   m_SourcePrefab: {fileID: 100100000, guid: 0eb0525df28d6e74c8e0ff312c28de5e, type: 3}
 --- !u!1 &420466287897314542 stripped
 GameObject:
@@ -80,14 +86,48 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PartyFollower
   controller: {fileID: 6482135328470273678}
   visual: {fileID: 4797779329037790785}
+  combatController: {fileID: -3156634534385849318}
   followSpeed: 4
   rotationSpeed: 10
-  animator: {fileID: 4614035593826590340}
---- !u!95 &4614035593826590340 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 3967080064588463884, guid: 0eb0525df28d6e74c8e0ff312c28de5e, type: 3}
-  m_PrefabInstance: {fileID: 8576470668296511880}
+  gravity: -9.81
+  groundForce: -2
+--- !u!114 &-3156634534385849318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 420466287897314542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08b4d26f4b03b4b4f9d515e27d3864d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PartyCombatController
+  follower: {fileID: 434931513523913364}
+  skillController: {fileID: 5065046670168482810}
+  agent: {fileID: 0}
+  detectionRange: 10
+  attackRange: 3
+  regroupDistance: 5
+  teleportDistance: 15
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  maxHits: 32
+--- !u!114 &5065046670168482810
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 420466287897314542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 261adafec7707184a9273a707c2d815d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AISkillController
+  skillExecuter: {fileID: 9045020377421263630}
+  animator: {fileID: 0}
 --- !u!114 &4797779329037790785 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3859756682307211209, guid: 0eb0525df28d6e74c8e0ff312c28de5e, type: 3}
@@ -104,3 +144,14 @@ CharacterController:
   m_CorrespondingSourceObject: {fileID: 3382367272967728902, guid: 0eb0525df28d6e74c8e0ff312c28de5e, type: 3}
   m_PrefabInstance: {fileID: 8576470668296511880}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &9045020377421263630 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 757696267567747718, guid: 0eb0525df28d6e74c8e0ff312c28de5e, type: 3}
+  m_PrefabInstance: {fileID: 8576470668296511880}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 420466287897314542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b181f17db61311447b654a14095f1aab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkillExecuter

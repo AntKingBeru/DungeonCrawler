@@ -15,15 +15,19 @@ MonoBehaviour:
   enemyName: Warrior
   type: 0
   enemyPrefab: {fileID: 5922563431072266052, guid: 45a00f2260ad0a240af7ea0d3c4b0e70, type: 3}
-  maxHealth: 80
-  damage: 10
+  maxHealth: 85
   moveSpeed: 3
   canSummon: 0
   spawnAnimation: {fileID: 7400000, guid: e47a55bf925805d45a1230a7cec80653, type: 2}
   spawnVFX: {fileID: 525564822105975866, guid: 1c06f63f1a7dfb6469fce6c4ca77ff51, type: 3}
   spawnDuration: 1.2
+  attackType: 0
+  attackDamage: 14
   attackRange: 2
-  attackCooldown: 2
-  attackDamageMultiplier: 1
+  attackCooldown: 1.6
+  damageDelay: 0.4
+  aoeRadius: 3
+  projectilePrefab: {fileID: 0}
+  projectileSpeed: 10
   attackAnimation: {fileID: 7400000, guid: 0cc89d70422743845ab255373b136074, type: 2}
-  attackDuration: 1
+  attackDuration: 1.1

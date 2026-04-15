@@ -149,6 +149,10 @@ MonoBehaviour:
   agent: {fileID: 3364937049883454721}
   modelRoot: {fileID: 1282140503050357626}
   animator: {fileID: 8482422984767006164}
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  maxHits: 32
   onDeath:
     m_PersistentCalls:
       m_Calls: []

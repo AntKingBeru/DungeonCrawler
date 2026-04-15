@@ -16,14 +16,18 @@ MonoBehaviour:
   type: 0
   enemyPrefab: {fileID: 3038203174215093504, guid: 32df5e57b3c121746bea113eb863ffa5, type: 3}
   maxHealth: 45
-  damage: 14
-  moveSpeed: 2.8
+  moveSpeed: 2.6
   canSummon: 0
   spawnAnimation: {fileID: 7400000, guid: e47a55bf925805d45a1230a7cec80653, type: 2}
   spawnVFX: {fileID: 525564822105975866, guid: 1c06f63f1a7dfb6469fce6c4ca77ff51, type: 3}
   spawnDuration: 1.2
-  attackRange: 2
-  attackCooldown: 2
-  attackDamageMultiplier: 1
+  attackType: 1
+  attackDamage: 16
+  attackRange: 8
+  attackCooldown: 2.4
+  damageDelay: 0.5
+  aoeRadius: 3
+  projectilePrefab: {fileID: 0}
+  projectileSpeed: 12
   attackAnimation: {fileID: 7400000, guid: 8568229dd007b224fb181a6e14ec8205, type: 2}
-  attackDuration: 1
+  attackDuration: 1.3
