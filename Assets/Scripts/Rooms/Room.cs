@@ -44,6 +44,12 @@ public class Room : MonoBehaviour
 
         _isActive = true;
 
+        if (_encounterCompleted)
+        {
+            OpenAllDoors();
+            return;
+        }
+
         if (isStartRoom)
             return;
         

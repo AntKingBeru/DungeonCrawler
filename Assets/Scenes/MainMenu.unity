@@ -7637,6 +7637,9 @@ MonoBehaviour:
   onDataUpdated:
     m_PersistentCalls:
       m_Calls: []
+  onBossProgressUpdated:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &2035912297
 MonoBehaviour:
   m_ObjectHideFlags: 0

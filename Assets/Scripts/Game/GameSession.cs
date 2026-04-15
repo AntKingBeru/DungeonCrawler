@@ -39,16 +39,16 @@ public class GameSession : MonoBehaviour
     public void SetPlayer(CharacterSelectionData data)
     {
         Player = data;
-        Player.currentHealth = data.@class.maxHealth;
-        Player.currentMana = data.@class.maxMana;
+        Player.SetHealth(data.@class.maxHealth);
+        Player.SetMana(data.@class.maxMana);
         onDataUpdated?.Invoke();
     }
 
     public void SetPartyMember(int index, CharacterSelectionData data)
     {
         Party[index] = data;
-        Party[index].currentHealth = data.@class.maxHealth;
-        Party[index].currentMana = data.@class.maxMana;
+        Party[index].SetHealth(data.@class.maxHealth);
+        Party[index].SetMana(data.@class.maxMana);
         onDataUpdated?.Invoke();
     }
 

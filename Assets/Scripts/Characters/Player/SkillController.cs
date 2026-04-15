@@ -7,6 +7,7 @@ public class SkillController : MonoBehaviour
 {
     [Header("Input")]
     [SerializeField] private InputActionReference[] skillActions;
+    [SerializeField] private float holdThreshold = 0.5f;
     
     [Header("Setup")]
     [SerializeField] private Transform castPoint;
@@ -30,6 +31,7 @@ public class SkillController : MonoBehaviour
     private Animator _animator;
     private static readonly int AttackHash = Animator.StringToHash("Attack");
 
+    private float[] _holdTimers;
     private int _currentTooltipIndex = -1;
     private float _regenTimer;
     
@@ -50,6 +52,8 @@ public class SkillController : MonoBehaviour
         _castBuffer = new RaycastHit[maxHits];
 
         _hotbarUI.Initialize(_skills);
+        
+        _holdTimers = new float[_skills.Length];
     }
 
     private void BuildSkills()
@@ -118,12 +122,21 @@ public class SkillController : MonoBehaviour
             var action = skillActions[i].action;
 
             if (action.IsPressed())
-                ShowTooltip(i);
-            else
-                HideTooltip(i);
+            {
+                _holdTimers[i] += Time.deltaTime;
+                
+                if (_holdTimers[i] >= holdThreshold)
+                    ShowTooltip(i);
+            }
 
-            if (action.WasPressedThisFrame())
-                TryUseSkill(i);
+            if (action.WasReleasedThisFrame())
+            {
+                if (_holdTimers[i] < holdThreshold)
+                    TryUseSkill(i);
+                
+                HideTooltip(i);
+                _holdTimers[i] = 0f;
+            }
         }
     }
 
@@ -140,8 +153,8 @@ public class SkillController : MonoBehaviour
         if (_data.currentMana >= _data.@class.maxMana)
             return;
         
-        _data.currentMana += manaRegenPerSecond * Time.deltaTime;
-        _data.currentMana = Mathf.Min(_data.currentMana, _data.@class.maxMana);
+        _data.SetMana(_data.currentMana + manaRegenPerSecond * Time.deltaTime);
+        _data.SetMana(Mathf.Min(_data.currentMana, _data.@class.maxMana));
     }
     
     private void TryUseSkill(int index)
@@ -158,7 +171,7 @@ public class SkillController : MonoBehaviour
     
     private void UseSkill(SkillRuntime skill)
     {
-        _data.currentMana -= skill.Data.manaCost;
+        _data.SetMana(_data.currentMana - skill.Data.manaCost);
         _regenTimer = 0f;
         
         skill.Trigger();
@@ -245,8 +258,7 @@ public class SkillController : MonoBehaviour
         
         _currentTooltipIndex = index;
         
-        if (TooltipUI.Instance)
-            TooltipUI.Instance.ShowAt(_skills[index].Data, _hotbarUI.GetSlot(index));
+        TooltipUI.Instance?.ShowAt(_skills[index].Data, _hotbarUI.GetSlot(index));
     }
 
     private void HideTooltip(int index)

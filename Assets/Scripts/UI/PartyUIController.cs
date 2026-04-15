@@ -16,6 +16,15 @@ public class PartyUIController : MonoBehaviour
     private CharacterSelectionData _player;
     private CharacterSelectionData[] _party;
 
+    private void OnDestroy()
+    {
+        if (_player != null)
+        {
+            _player.OnHealthChanged -= OnPlayerHealthChanged;
+            _player.OnManaChanged -= OnPlayerManaChanged;
+        }
+    }
+
     public void Start()
     {
         Initialize();
@@ -37,6 +46,22 @@ public class PartyUIController : MonoBehaviour
 
         playerHealth.maxValue = _player.@class.maxHealth;
         playerMana.maxValue = _player.@class.maxMana;
+
+        _player.OnHealthChanged += OnPlayerHealthChanged;
+        _player.OnManaChanged += OnPlayerManaChanged;
+
+        OnPlayerHealthChanged(_player.currentHealth);
+        OnPlayerManaChanged(_player.currentMana);
+    }
+    
+    private void OnPlayerHealthChanged(float value)
+    {
+        playerHealth.value = value;
+    }
+    
+    private void OnPlayerManaChanged(float value)
+    {
+        playerMana.value = value;
     }
 
     private void SetupParty()

@@ -176,8 +176,6 @@ public class Enemy : MonoBehaviour, IDamageable
             animator.SetTrigger(HitHash);
 
         CurrentHealth -= amount;
-
-        Debug.Log($"{Data.name} took {amount} damage. Current health: {CurrentHealth}");
         
         if (CurrentHealth <= 0f)
             Die();

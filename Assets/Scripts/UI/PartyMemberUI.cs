@@ -10,6 +10,15 @@ public class PartyMemberUI : MonoBehaviour
     [SerializeField] private TMP_Text nameText;
     
     private CharacterSelectionData _data;
+    
+    private void OnDestroy()
+    {
+        if (_data != null)
+        {
+            _data.OnHealthChanged -= OnHealthChanged;
+            _data.OnManaChanged -= OnManaChanged;
+        }
+    }
 
     public void Initialize(CharacterSelectionData data)
     {
@@ -20,6 +29,22 @@ public class PartyMemberUI : MonoBehaviour
 
         health.maxValue = data.@class.maxHealth;
         mana.maxValue = data.@class.maxMana;
+
+        _data.OnHealthChanged += OnHealthChanged;
+        _data.OnManaChanged += OnManaChanged;
+        
+        OnHealthChanged(_data.currentHealth);
+        OnManaChanged(_data.currentMana);
+    }
+    
+    private void OnHealthChanged(float value)
+    {
+        health.value = value;
+    }
+    
+    private void OnManaChanged(float value)
+    {
+        mana.value = value;
     }
 
     public void UpdateUI()
