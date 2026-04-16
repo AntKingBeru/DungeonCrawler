@@ -22,6 +22,9 @@ MonoBehaviour:
   damageMultiplier: 0
   range: 0
   radius: 2.5
+  lineWidth: 0
   maxTargets: 0
   castVFX: {fileID: 0}
   hitVFX: {fileID: 0}
+  effects:
+  - {fileID: 11400000, guid: 04abf957ab3e1ba4f8bc2be134b0bf40, type: 2}

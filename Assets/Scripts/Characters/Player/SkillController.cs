@@ -101,7 +101,7 @@ public class SkillController : MonoBehaviour
     private void TickCooldowns()
     {
         foreach (var skill in _skills)
-            skill.Tick(Time.deltaTime);
+            skill.Tick(skillExecuter.AttackSpeedMultiplier * Time.deltaTime);
     }
 
     private void HandleInput()

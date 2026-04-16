@@ -2,39 +2,54 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Enemy : MonoBehaviour, IDamageable
 {
-    [Header("References")]
-    [SerializeField] protected NavMeshAgent agent;
-    
-    [SerializeField] protected GameObject modelRoot;
-    
-    [Header("Runtime")]
-    protected EnemyData Data;
-    protected Transform Target;
-    protected float CurrentHealth;
-    
-    [Header("Animation")]
-    [SerializeField] protected Animator animator;
     protected static readonly int SpeedHash = Animator.StringToHash("Speed");
     protected static readonly int AttackHash = Animator.StringToHash("Attack");
     protected static readonly int HitHash = Animator.StringToHash("Hit");
-    protected static readonly int DieHash = Animator.StringToHash("Die");
-    
-    [Header("Performance")]
-    [SerializeField] private LayerMask targetLayer;
-    [SerializeField] private int maxHits = 32;
-    
-    protected bool IsActive;
-    protected bool IsAttacking;
+    private static readonly int DieHash = Animator.StringToHash("Die");
 
-    protected float AttackTimer;
+    public bool HasCc => IsRooted || ForcedTarget;
     
-    private Collider[] _overlapBuffer;
+    #region Events
 
     public UnityEvent<Enemy> onDeath;
     public UnityEvent<Enemy> onSpawnFinished;
+    
+    #endregion
+
+    #region References
+
+    [SerializeField] protected NavMeshAgent agent;
+    [SerializeField] protected Animator animator;
+
+    #endregion
+    
+    #region Data
+
+    protected EnemyData Data;
+    protected Transform Target;
+
+    protected float CurrentHealth;
+
+    private readonly List<ActiveEffect> _effects = new();
+
+    #endregion
+    
+    #region State
+
+    protected bool IsActive;
+    protected bool IsAttacking;
+    protected float AttackTimer;
+    
+    protected Transform ForcedTarget;
+    protected bool IsRooted;
+    
+    #endregion
+    
+    #region Initialization
 
     public virtual void Initialize(EnemyData data, Transform target)
     {
@@ -44,31 +59,23 @@ public class Enemy : MonoBehaviour, IDamageable
         CurrentHealth = Data.maxHealth;
         
         agent.speed = Data.moveSpeed;
-        agent.enabled = false;
-        
-        _overlapBuffer = new Collider[maxHits];
 
         StartCoroutine(SpawnRoutine());
+        
+        IsActive = true;
     }
-    
+
     private IEnumerator SpawnRoutine()
     {
         IsActive = false;
         agent.enabled = false;
-        modelRoot.SetActive(true);
         
-        // Spawn VFX
         if (Data.spawnVFX)
-            Instantiate(
-                Data.spawnVFX,
-                transform.position,
-                Quaternion.identity
-            );
+            Instantiate(Data.spawnVFX, transform.position, Quaternion.identity);
         
-        // Play spawn animation
         if (animator && Data.spawnAnimation)
             animator.Play(Data.spawnAnimation.name);
-        
+
         yield return new WaitForSeconds(Data.spawnDuration);
         
         agent.enabled = true;
@@ -77,31 +84,52 @@ public class Enemy : MonoBehaviour, IDamageable
         onSpawnFinished?.Invoke(this);
     }
     
+    #endregion
+    
+    #region Update
+
     protected virtual void Update()
     {
-        if (!IsActive || !Target)
+        if (!IsActive)
             return;
+        
+        UpdateEffects(Time.deltaTime);
         
         AttackTimer -= Time.deltaTime;
         
-        var distance = Vector3.Distance(transform.position, Target.position);
+        var currentTarget = ForcedTarget ? ForcedTarget : Target;
 
-        if (distance <= Data.attackRange)
-            HandleAttack();
+        if (!currentTarget)
+            return;
+        
+        var dist = Vector3.Distance(transform.position, currentTarget.position);
+        
+        if (dist <= Data.attackRange)
+            TryAttack(currentTarget);
         else
-            HandleMovement();
+            MoveTo(currentTarget);
         
         UpdateAnimation();
     }
 
-    protected virtual void HandleMovement()
+    protected virtual void UpdateAnimation()
     {
-        if (IsAttacking)
+        if (animator)
+            animator.SetFloat(SpeedHash, agent.velocity.magnitude);
+    }
+    
+    #endregion
+    
+    #region Movement
+
+    protected void MoveTo(Transform target)
+    {
+        if (IsRooted)
             return;
         
         agent.isStopped = false;
-        agent.SetDestination(Target.position);
-        
+        agent.SetDestination(target.position);
+
         UpdateRotation();
     }
     
@@ -113,146 +141,119 @@ public class Enemy : MonoBehaviour, IDamageable
             transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * 10f);
         }
     }
+    
+    #endregion
+    
+    #region Attack
 
-    protected virtual void HandleAttack()
+    protected void TryAttack(Transform target)
     {
         agent.isStopped = true;
 
-        LookAtTarget();
-
         if (AttackTimer > 0f || IsAttacking)
             return;
-
-        StartCoroutine(AttackRoutine());
+        
+        StartCoroutine(AttackRoutine(target));
     }
 
-    private IEnumerator AttackRoutine()
+    private IEnumerator AttackRoutine(Transform target)
     {
         IsAttacking = true;
         
-        if (animator && Data.attackAnimation)
-            animator.SetTrigger(AttackHash);
+        animator.SetTrigger(AttackHash);
 
         yield return new WaitForSeconds(Data.damageDelay);
 
-        ExecuteAttack();
+        ExecuteAttack(target);
 
-        yield return new WaitForSeconds(Data.attackDuration - Data.damageDelay);
+        yield return new WaitForSeconds(Data.attackCooldown);
 
         AttackTimer = Data.attackCooldown;
         IsAttacking = false;
     }
 
-    protected virtual void ExecuteAttack()
+    private void ExecuteAttack(Transform target)
     {
-        switch (Data.attackType)
-        {
-            case EnemyAttackType.Melee:
-                DoMeleeAttack();
-                break;
-            case EnemyAttackType.Ranged:
-                DoRangedAttack();
-                break;
-            case EnemyAttackType.AoE:
-                DoAoEAttack();
-                break;
-        }
-    }
-
-    protected virtual void DoMeleeAttack()
-    {
-        if (!Target)
-            return;
-
-        if (Vector3.Distance(transform.position, Target.position) > Data.attackRange)
+        if (!target.TryGetComponent(out IDamageable damageable))
             return;
         
-        if (Target.TryGetComponent(out IDamageable damageable))
-            damageable.TakeDamage(Data.attackDamage);
+        damageable.TakeDamage(Data.attackDamage);
     }
+    
+    #endregion
+    
+    #region Effects
 
-    protected virtual void DoRangedAttack()
+    public void ApplyEffect(StatusEffectData effect, Transform source = null)
     {
-        if (!Target || !Data.projectilePrefab)
-            return;
-
-        var dir = (Target.position - transform.position).normalized;
-
-        var proj = Instantiate(
-            Data.projectilePrefab,
-            transform.position + Vector3.up * 1.5f,
-            Quaternion.LookRotation(dir)
-        );
-        
-        proj.Initialize(Target, Data.attackDamage, Data.projectileSpeed);
-    }
-
-    protected virtual void DoAoEAttack()
-    {
-        var hitCount = Physics.OverlapSphereNonAlloc(
-            transform.position,
-            Data.aoeRadius,
-            _overlapBuffer,
-            targetLayer
-        );
-
-        for (var i = 0; i < hitCount; i++)
+        _effects.Add(new ActiveEffect
         {
-            var col = _overlapBuffer[i];
+            Data = effect,
+            Timer = effect.duration,
+            Source = source
+        });
+    }
+
+    private void UpdateEffects(float dt)
+    {
+        IsRooted = false;
+        ForcedTarget = null;
+
+        for (var i = _effects.Count - 1; i >= 0; i--)
+        {
+            var e = _effects[i];
+            e.Timer -= dt;
             
-            if (col.TryGetComponent<IDamageable>(out var damageable))
-                damageable.TakeDamage(Data.attackDamage);
-        }
-    }
+            switch (e.Data.type)
+            {
+                case StatusEffectType.Root:
+                    IsRooted = true;
+                    break;
 
-    protected virtual void LookAtTarget()
-    {
-        var dir = (Target.position - transform.position).normalized;
-        dir.y = 0;
-
-        if (dir.sqrMagnitude > 0.01f)
-        {
-            var rot = Quaternion.LookRotation(dir);
-            transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * 10f);
+                case StatusEffectType.Taunt:
+                    ForcedTarget = e.Source;
+                    break;
+            }
+            
+            if (e.Timer <= 0f)
+                _effects.RemoveAt(i);
         }
     }
     
-    protected virtual void UpdateAnimation()
+    #endregion
+    
+    #region Damage
+
+    public void TakeDamage(float amount)
     {
-        if (!animator)
-            return;
-
-        animator.SetFloat(SpeedHash, agent.velocity.magnitude);
-    }
-
-    public virtual void TakeDamage(float amount)
-    {
-        if (!IsActive)
-            return;
-        
-        if (animator)
-            animator.SetTrigger(HitHash);
-
         CurrentHealth -= amount;
-        
+
+        animator.SetTrigger(HitHash);
+
         if (CurrentHealth <= 0f)
             Die();
     }
 
-    protected virtual void Die()
+    private void Die()
     {
         onDeath?.Invoke(this);
-        agent.enabled = false;
-
-        if (animator)
-            animator.SetTrigger(DieHash);
-
-        StartCoroutine(DeathRoutine());
+        animator.SetTrigger(DieHash);
+        Destroy(gameObject, 2f);
     }
 
-    private IEnumerator DeathRoutine()
+    private void OnDestroy()
     {
-        yield return new WaitForSeconds(2f);
-        Destroy(gameObject);
+        EnemyRegistry.Unregister(this);
     }
+    
+    #endregion
+    
+    #region Knockback
+
+    public void ApplyKnockback(Vector3 direction, float force)
+    {
+        agent.Move(direction * force);
+    }
+    
+    #endregion
 }

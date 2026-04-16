@@ -149,6 +149,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b181f17db61311447b654a14095f1aab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SkillExecuter
+  controller: {fileID: 3382367272967728902}
   castPoint: {fileID: 1734088369252481908}
   targetLayer:
     serializedVersion: 2

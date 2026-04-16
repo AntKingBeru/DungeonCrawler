@@ -16,8 +16,11 @@ public class SkillData : ScriptableObject
     public float damageMultiplier;
     public float range;
     public float radius;
+    public float lineWidth;
     public float maxTargets;
 
     public GameObject castVFX;
     public GameObject hitVFX;
+
+    public StatusEffectData[] effects;
 }

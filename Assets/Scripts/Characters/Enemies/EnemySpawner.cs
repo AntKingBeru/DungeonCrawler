@@ -5,21 +5,30 @@ using System.Collections.Generic;
 
 public class EnemySpawner : MonoBehaviour
 {
+    #region Data
+    
     [Header("Data")]
     [SerializeField] private EnemyDatabase database;
     
-    [Header("Runtime")]
+    #endregion
+    
+    #region Runtime
+    
     private readonly List<Enemy> _spawned = new();
     private int _aliveEnemies;
 
     public int AliveEnemies => _aliveEnemies;
+    public IReadOnlyList<Enemy> Spawned => _spawned;
+    
+    #endregion
     
     #region Public API
 
     public void Clear()
     {
-        foreach (var enemy in _spawned.Where(enemy => enemy))
+        foreach (var enemy in _spawned.Where(e => e))
         {
+            EnemyRegistry.Unregister(enemy);
             Destroy(enemy.gameObject);
         }
 
@@ -66,11 +75,8 @@ public class EnemySpawner : MonoBehaviour
     {
         var finished = 0;
 
-        foreach (var enemy in _spawned.Where(enemy => enemy))
+        foreach (var enemy in _spawned.Where(e => e))
         {
-            if (!enemy)
-                continue;
-            
             void OnSpawn(Enemy e)
             {
                 finished++;
@@ -108,10 +114,13 @@ public class EnemySpawner : MonoBehaviour
             Quaternion.identity
         );
 
-        enemy.Initialize(data, GameInitializer.PlayerInstance.transform);
+        var player = GameInitializer.PlayerInstance.transform;
+        enemy.Initialize(data, player);
         
         _spawned.Add(enemy);
         _aliveEnemies++;
+
+        EnemyRegistry.Register(enemy);
         
         enemy.onDeath.AddListener(OnEnemyDeath);
     }
@@ -119,6 +128,8 @@ public class EnemySpawner : MonoBehaviour
     private void OnEnemyDeath(Enemy enemy)
     {
         _aliveEnemies--;
+        
+        EnemyRegistry.Unregister(enemy);
         
         enemy.onDeath.RemoveListener(OnEnemyDeath);
     }

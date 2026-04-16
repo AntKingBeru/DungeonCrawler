@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1432f6fc66d20b14280f3d801a343b65, type: 3}
+  m_Name: Frost
+  m_EditorClassIdentifier: Assembly-CSharp::StatusEffectData
+  type: 10
+  duration: 2
+  isPermanent: 0
+  value: 0
+  tickInterval: 1
+  tickValue: 0
+  affectsMovement: 0
+  affectsDamage: 0
+  affectsHealing: 0
+  isStackable: 0
+  maxStacks: 1
+  scaleWithNearbyEnemies: 0
+  radius: 0
+  applyToCaster: 0
+  applyToTarget: 0
+  secondaryValue: 0

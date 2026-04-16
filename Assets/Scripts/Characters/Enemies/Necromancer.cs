@@ -19,13 +19,18 @@ public class Necromancer : Enemy
 
     protected override void Update()
     {
-        if (!IsActive || IsAttacking)
+        if (!IsActive)
             return;
 
         AttackTimer -= Time.deltaTime;
         _rangedTimer -= Time.deltaTime;
         
-        var distance = Vector3.Distance(transform.position, Target.position);
+        var currentTarget = ForcedTarget ? ForcedTarget : Target;
+        
+        if (!currentTarget)
+            return;
+        
+        var dist = Vector3.Distance(transform.position, Target.position);
 
         if (!IsAttacking && _summonTimer >= summonInterval)
         {
@@ -38,12 +43,12 @@ public class Necromancer : Enemy
             }
         }
 
-        if (distance <= Data.attackRange)
-            HandleAttack();
-        else if (distance <= rangedRange)
+        if (dist <= Data.attackRange)
+            TryAttack(currentTarget);
+        else if (dist <= rangedRange)
             HandleRangedAttack();
         else
-            HandleMovement();
+            MoveTo(currentTarget);
         
         UpdateAnimation();
     }
@@ -109,5 +114,17 @@ public class Necromancer : Enemy
         );
         
         proj.Initialize(Target, rangedDamage, projectileSpeed);
+    }
+
+    private void LookAtTarget()
+    {
+        var dir = (Target.position - transform.position).normalized;
+        dir.y = 0f;
+
+        if (dir.sqrMagnitude > 0.01f)
+        {
+            var rot = Quaternion.LookRotation(dir);
+            transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * 10f);
+        }
     }
 }

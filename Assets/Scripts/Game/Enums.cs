@@ -58,3 +58,42 @@ public enum SkillType
     Active,
     Passive
 }
+
+public enum StatusEffectType
+{
+    // Buffs
+    AttackSpeed,
+    MoveSpeed,
+    DamageBoost,
+    DamageReduction,
+    HealingBoost,
+
+    // Over Time
+    DamageOverTime,
+    HealOverTime,
+
+    // Crowd Control
+    Root,
+    Slow,
+    Stun,
+    Freeze,
+
+    // Defensive
+    DeathImmunity,
+    Reflect,
+    Untargetable,
+    Block,
+
+    // Aggro
+    Taunt,
+
+    // Conditional
+    BackstabBonus,
+    BonusVsCc,
+    DistanceDamageBonus,
+    TargetMarked,
+
+    // Utility
+    TeleportBehind,
+    Trap
+}

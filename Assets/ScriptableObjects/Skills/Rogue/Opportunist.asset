@@ -13,9 +13,19 @@ MonoBehaviour:
   m_Name: Opportunist
   m_EditorClassIdentifier: Assembly-CSharp::SkillData
   skillName: Opportunist
-  description: Deal increased damage to enemies affected by crows control or from
+  description: Deal increased damage to enemies affected by crowd control or from
     behind.
   icon: {fileID: 621082864, guid: 931927bbe0f21ec41bef5085c6ddd11d, type: 3}
   type: 1
+  targetType: 0
   cooldown: 0
   manaCost: 0
+  damageMultiplier: 0
+  range: 0
+  radius: 0
+  lineWidth: 0
+  maxTargets: 0
+  castVFX: {fileID: 0}
+  hitVFX: {fileID: 0}
+  effects:
+  - {fileID: 11400000, guid: 72520dd642a2778488805e1baa487886, type: 2}
