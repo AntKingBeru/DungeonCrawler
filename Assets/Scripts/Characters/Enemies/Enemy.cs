@@ -61,8 +61,6 @@ public class Enemy : MonoBehaviour, IDamageable
         agent.speed = Data.moveSpeed;
 
         StartCoroutine(SpawnRoutine());
-        
-        IsActive = true;
     }
 
     private IEnumerator SpawnRoutine()
@@ -79,6 +77,15 @@ public class Enemy : MonoBehaviour, IDamageable
         yield return new WaitForSeconds(Data.spawnDuration);
         
         agent.enabled = true;
+        
+        if (NavMesh.SamplePosition(transform.position, out var hit, 1f, NavMesh.AllAreas))
+            agent.Warp(hit.position);
+
+        yield return null;
+
+        if (!agent.isOnNavMesh)
+            yield break;
+        
         IsActive = true;
         
         onSpawnFinished?.Invoke(this);
@@ -127,6 +134,9 @@ public class Enemy : MonoBehaviour, IDamageable
         if (IsRooted)
             return;
         
+        if (!agent || !agent.enabled || !agent.isOnNavMesh)
+            return;
+        
         agent.isStopped = false;
         agent.SetDestination(target.position);
 
@@ -148,7 +158,8 @@ public class Enemy : MonoBehaviour, IDamageable
 
     protected void TryAttack(Transform target)
     {
-        agent.isStopped = true;
+        if (agent && agent.enabled && agent.isOnNavMesh)
+            agent.isStopped = true;
 
         if (AttackTimer > 0f || IsAttacking)
             return;

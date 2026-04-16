@@ -103,17 +103,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08b4d26f4b03b4b4f9d515e27d3864d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PartyCombatController
+  controller: {fileID: 6482135328470273678}
   follower: {fileID: 434931513523913364}
   skillController: {fileID: 5065046670168482810}
-  agent: {fileID: 0}
+  skillExecuter: {fileID: 9045020377421263630}
   detectionRange: 10
   attackRange: 3
+  combatMoveSpeed: 3.5
+  rotationSpeed: 10
   regroupDistance: 5
-  teleportDistance: 15
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  maxHits: 32
+  lowHealthThreshold: 0.3
+  distanceWeight: 1
+  threatWeight: 2
+  stuckThreshold: 0.1
+  stuckTime: 2
 --- !u!114 &5065046670168482810
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -127,7 +130,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AISkillController
   skillExecuter: {fileID: 9045020377421263630}
-  animator: {fileID: 0}
 --- !u!114 &4797779329037790785 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3859756682307211209, guid: 0eb0525df28d6e74c8e0ff312c28de5e, type: 3}

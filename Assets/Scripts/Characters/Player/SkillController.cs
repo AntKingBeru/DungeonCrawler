@@ -50,17 +50,21 @@ public class SkillController : MonoBehaviour
 
     private void BuildSkills()
     {
-        var allSkills = new List<SkillData>();
+        var unique = new HashSet<SkillData>();
         
-        allSkills.AddRange(_data.@class.startingSkills);
-        
+        foreach (var skill in _data.@class.startingSkills)
+            unique.Add(skill);
+
         if (_data.unlockedSkills != null)
-            allSkills.AddRange(_data.unlockedSkills);
+        {
+            foreach (var skill in _data.unlockedSkills)
+                unique.Add(skill);
+        }
         
         var active = new List<SkillData>();
         var passive = new List<SkillData>();
 
-        foreach (var skill in allSkills)
+        foreach (var skill in unique)
         {
             if (skill.type == SkillType.Active)
                 active.Add(skill);
