@@ -22,6 +22,8 @@ public class DungeonSpawner : MonoBehaviour
     public void SpawnDungeon()
     {
         StartCoroutine(SpawnRoutine());
+
+        navMesh.BuildNavMesh();
     }
 
     private IEnumerator SpawnRoutine()
@@ -38,8 +40,6 @@ public class DungeonSpawner : MonoBehaviour
 
         yield return null;
         yield return null;
-        
-        navMesh.UpdateNavMesh(navMesh.navMeshData);
     }
 
     private void SpawnRoom(DungeonRoomNode node, Dictionary<Vector2Int, DungeonRoomNode> allRooms)
