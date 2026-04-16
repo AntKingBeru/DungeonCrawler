@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
@@ -10,6 +11,8 @@ public class CharacterSelectionData
     
     public float currentHealth;
     public float currentMana;
+
+    public List<SkillData> unlockedSkills = new();
     
     public event Action<float> OnHealthChanged;
     public event Action<float> OnManaChanged;

@@ -60,7 +60,7 @@ public class Room : MonoBehaviour
     
     #region Encounter Flow
 
-    private IEnumerator EncounterRoutine()
+    protected virtual IEnumerator EncounterRoutine()
     {
         CloseAllDoors();
         
@@ -77,7 +77,7 @@ public class Room : MonoBehaviour
         OpenAllDoors();
     }
 
-    private void SpawnEnemies()
+    protected virtual void SpawnEnemies()
     {
         if (isBossRoom)
         {

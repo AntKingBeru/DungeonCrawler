@@ -7,6 +7,7 @@ public class RoomDatabase : ScriptableObject
     public Room normalRoom;
     public Room bossRoom;
     public Room rewardRoom;
+    public Room victoryRoom;
     
     public Room GetRoom(RoomType type) => type switch
     {
@@ -14,6 +15,7 @@ public class RoomDatabase : ScriptableObject
         RoomType.Normal => normalRoom,
         RoomType.Boss => bossRoom,
         RoomType.Reward => rewardRoom,
+        RoomType.Victory => victoryRoom,
         _ => normalRoom
     };
 }

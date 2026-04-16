@@ -41,6 +41,8 @@ public class GameSession : MonoBehaviour
         Player = data;
         Player.SetHealth(data.@class.maxHealth);
         Player.SetMana(data.@class.maxMana);
+        foreach (var skill in data.@class.startingSkills)
+            Player.unlockedSkills.Add(skill);
         onDataUpdated?.Invoke();
     }
 
@@ -49,6 +51,8 @@ public class GameSession : MonoBehaviour
         Party[index] = data;
         Party[index].SetHealth(data.@class.maxHealth);
         Party[index].SetMana(data.@class.maxMana);
+        foreach (var skill in data.@class.startingSkills)
+            Party[index].unlockedSkills.Add(skill);
         onDataUpdated?.Invoke();
     }
 

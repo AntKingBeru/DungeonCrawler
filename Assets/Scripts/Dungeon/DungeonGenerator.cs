@@ -32,6 +32,7 @@ public class DungeonGenerator : MonoBehaviour
 
         for (var bossIndex = 0; bossIndex < bossCount; bossIndex++)
         {
+            
             // Generate normal rooms
             for (var i = 0; i < roomsPerBoss; i++)
             {
@@ -42,10 +43,18 @@ public class DungeonGenerator : MonoBehaviour
             // Boss room
             currentPos = GetNextPosition(currentPos);
             _rooms[currentPos] = new DungeonRoomNode(currentPos, RoomType.Boss);
-            
-            // Reward room
-            currentPos = GetNextPosition(currentPos);
-            _rooms[currentPos] = new DungeonRoomNode(currentPos, RoomType.Reward);
+
+            if (bossIndex < bossCount - 1)
+            {
+                // Reward room
+                currentPos = GetNextPosition(currentPos);
+                _rooms[currentPos] = new DungeonRoomNode(currentPos, RoomType.Reward);
+            }
+            else
+            {
+                currentPos = GetNextPosition(currentPos);
+                _rooms[currentPos] = new DungeonRoomNode(currentPos, RoomType.Victory);
+            }
         }
         
         return _rooms;

@@ -29,12 +29,19 @@ public enum FormationType
     FollowLeader
 }
 
+public enum RewardType
+{
+    UnlockSkill,
+    StatBoost
+}
+
 public enum RoomType
 {
     Start,
     Normal,
     Boss,
-    Reward
+    Reward,
+    Victory
 }
 
 public enum SceneId
