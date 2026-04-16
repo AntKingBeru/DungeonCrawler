@@ -15,5 +15,5 @@ MonoBehaviour:
   startRoom: {fileID: 1085127907826701922, guid: 355878a7ac6cc234e92780548a68f3db, type: 3}
   normalRoom: {fileID: 3127244141871500946, guid: 4f88c64eb5302324fbb160806de6c30a, type: 3}
   bossRoom: {fileID: 5024845720729404827, guid: af4f7ba0294638f4ca4b96fb5ce5d98d, type: 3}
-  rewardRoom: {fileID: 7305579479265698974, guid: 3bd1782dcc525bb499bfccb826ac52a9, type: 3}
-  victoryRoom: {fileID: 7305579479265698974, guid: 3bd1782dcc525bb499bfccb826ac52a9, type: 3}
+  rewardRoom: {fileID: 8540993508817907903, guid: 3bd1782dcc525bb499bfccb826ac52a9, type: 3}
+  victoryRoom: {fileID: 5528123360884954441, guid: f187a60bdca18c344b2ab9006a6f1645, type: 3}

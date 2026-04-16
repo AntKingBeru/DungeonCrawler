@@ -201,6 +201,8 @@ public class SkillExecuter : MonoBehaviour, IDamageable
         }
     }
 
+    public float GetHealthPercent() => _currentHealth / _data.@class.maxHealth;
+
     private void Heal(float amount)
     {
         _currentHealth += amount;
@@ -276,7 +278,7 @@ public class SkillExecuter : MonoBehaviour, IDamageable
     
     #region Execution
 
-    public void Execute(SkillData skill, CharacterSelectionData data)
+    public void Execute(SkillData skill, CharacterSelectionData data, Transform target)
     {
         if(skill.castVFX)
             Instantiate(skill.castVFX, castPoint.position, Quaternion.identity);
@@ -284,13 +286,13 @@ public class SkillExecuter : MonoBehaviour, IDamageable
         switch (skill.targetType)
         {
             case SkillTargetType.SingleTarget:
-                ExecuteSingleTarget(skill);
+                ExecuteSingleTarget(skill, target);
                 break;
             case SkillTargetType.Area:
                 ExecuteAoe(skill);
                 break;
             case SkillTargetType.Line:
-                ExecuteLine(skill);
+                ExecuteLine(skill, target);
                 break;
             case SkillTargetType.Chain:
                 ExecuteChain(skill);
@@ -298,13 +300,18 @@ public class SkillExecuter : MonoBehaviour, IDamageable
         }
     }
 
-    private void ExecuteSingleTarget(SkillData skill)
+    private void ExecuteSingleTarget(SkillData skill, Transform target)
     {
-        if (Physics.Raycast(castPoint.position, transform.forward, out var hit, skill.range, targetLayer))
+        if (!target)
+            return;
+        
+        var dir = GetDirection(target);
+        
+        if (Physics.Raycast(castPoint.position, dir, out var hit, skill.range, targetLayer))
         {
-            if (hit.collider.TryGetComponent<IDamageable>(out var target))
+            if (hit.collider.TryGetComponent<Enemy>(out var enemy))
             {
-                ApplyHit(skill, target, hit.point, hit.collider.transform);
+                ApplyHit(skill, enemy, hit.point, hit.collider.transform);
             }
         }
     }
@@ -320,19 +327,24 @@ public class SkillExecuter : MonoBehaviour, IDamageable
 
         for (var i = 0; i < hitCount; i++)
         {
-            if (_overlapBuffer[i].TryGetComponent<IDamageable>(out var target))
+            if (_overlapBuffer[i].TryGetComponent<Enemy>(out var enemy))
             {
-                ApplyHit(skill, target, _overlapBuffer[i].transform.position, _overlapBuffer[i].transform);
+                ApplyHit(skill, enemy, _overlapBuffer[i].transform.position, _overlapBuffer[i].transform);
             }
         }
     }
 
-    private void ExecuteLine(SkillData skill)
+    private void ExecuteLine(SkillData skill, Transform target)
     {
+        if (!target)
+            return;
+        
+        var dir = GetDirection(target);
+        
         var hitCount = Physics.SphereCastNonAlloc(
             castPoint.position,
             0.5f,
-            transform.forward,
+            dir,
             _castBuffer,
             skill.range,
             targetLayer
@@ -340,10 +352,10 @@ public class SkillExecuter : MonoBehaviour, IDamageable
         
         for (var i = 0; i < hitCount; i++)
         {
-            if (_castBuffer[i].transform.TryGetComponent<IDamageable>(out var target))
+            if (_castBuffer[i].transform.TryGetComponent<Enemy>(out var enemy))
             {
-                ApplyHit(skill, target, _castBuffer[i].transform.position, _castBuffer[i].transform);
-                target.ApplyKnockback(transform.forward, 5f);
+                ApplyHit(skill, enemy, _castBuffer[i].transform.position, _castBuffer[i].transform);
+                enemy.ApplyKnockback(transform.forward, 5f);
             }
         }
     }
@@ -363,7 +375,7 @@ public class SkillExecuter : MonoBehaviour, IDamageable
             if (!current || !visited.Add(current))
                 break;
 
-            if (current.TryGetComponent<IDamageable>(out var target))
+            if (current.TryGetComponent<Enemy>(out var target))
                 ApplyHit(skill, target, current.position, current);
             
             current = FindClosestFrom(current.position, skill.radius, visited);
@@ -405,7 +417,7 @@ public class SkillExecuter : MonoBehaviour, IDamageable
         Transform best = null;
         var bestDist = float.MaxValue;
 
-        for (int i = 0; i < count; i++)
+        for (var i = 0; i < count; i++)
         {
             var col = _overlapBuffer[i];
             if (!col)
@@ -435,7 +447,7 @@ public class SkillExecuter : MonoBehaviour, IDamageable
         Transform best = null;
         var bestDist = float.MaxValue;
         
-        for (int i = 0; i < count; i++)
+        for (var i = 0; i < count; i++)
         {
             var col = _overlapBuffer[i];
             if (!col)
@@ -456,6 +468,11 @@ public class SkillExecuter : MonoBehaviour, IDamageable
         }
 
         return best;
+    }
+
+    private Vector3 GetDirection(Transform target)
+    {
+        return target ? (target.position - transform.position).normalized : transform.forward;
     }
     
     #endregion

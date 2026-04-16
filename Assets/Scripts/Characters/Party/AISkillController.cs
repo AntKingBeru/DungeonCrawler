@@ -1,4 +1,6 @@
 using UnityEngine;
+using System.Linq;
+using System.Collections.Generic;
 
 public class AISkillController : MonoBehaviour
 {
@@ -6,38 +8,28 @@ public class AISkillController : MonoBehaviour
     
     [SerializeField] private SkillExecuter skillExecuter;
     
-    [Header("Performance")]
-    [SerializeField] private LayerMask targetLayer;
-    [SerializeField] private int maxHits = 32;
-    
     private Animator _animator;
 
     private CharacterSelectionData _data;
-    private SkillRuntime[] _skills;
-    
-    private Collider[] _overlapBuffer;
-
-    private void Awake()
-    {
-        _overlapBuffer = new Collider[maxHits];
-    }
+    private SkillRuntime[] _activeSkills;
+    private List<SkillData> _passiveSkills;
 
     public void Initialize(CharacterSelectionData data, Animator animator)
     {
         _data = data;
         _animator = animator;
 
-        var skills = data.@class.startingSkills;
+        BuildSkills();
+    }
 
-        _skills = new SkillRuntime[skills.Length];
+    private void OnEnable()
+    {
+        SkillSystemEvents.OnSkillsUpdated += RebuildSkills;
+    }
 
-        for (var i = 0; i < skills.Length; i++)
-        {
-            _skills[i] = new SkillRuntime
-            {
-                Data = skills[i],
-            };
-        }
+    private void OnDisable()
+    {
+        SkillSystemEvents.OnSkillsUpdated -= RebuildSkills;
     }
 
     private void Update()
@@ -45,15 +37,82 @@ public class AISkillController : MonoBehaviour
         TickCooldowns();
     }
 
+    private void RebuildSkills()
+    {
+        BuildSkills();
+        ApplyPassives();
+    }
+
+    private void BuildSkills()
+    {
+        if (_data == null || !_data.@class)
+            return;
+
+        var allSkills = new List<SkillData>();
+        
+        allSkills.AddRange(_data.@class.unlockableSkills);
+        
+        if (_data.unlockedSkills != null)
+            allSkills.AddRange(_data.unlockedSkills);
+        
+        var active = new List<SkillData>();
+        var passive = new List<SkillData>();
+        
+        foreach (var skill in allSkills)
+        {
+            if (skill.type == SkillType.Active)
+                active.Add(skill);
+            else
+                passive.Add(skill);
+        }
+
+        active.Sort((a, b) => GetPriority(b).CompareTo(GetPriority(a)));
+
+        _activeSkills = new SkillRuntime[active.Count];
+
+        for (var i = 0; i < active.Count; i++)
+        {
+            _activeSkills[i] = new SkillRuntime
+            {
+                Data = active[i],
+            };
+        }
+
+        _passiveSkills = passive;
+    }
+
+    private void ApplyPassives()
+    {
+        if (!skillExecuter)
+            return;
+
+        foreach (var effect in from passive in _passiveSkills from effect in passive.effects where effect.applyToCaster select effect)
+        {
+            skillExecuter.ApplyEffect(effect, transform);
+        }
+    }
+
+    private int GetPriority(SkillData skill)
+    {
+        return skill.targetType switch
+        {
+            SkillTargetType.Area => 3,
+            SkillTargetType.Chain => 3,
+            SkillTargetType.Line => 2,
+            SkillTargetType.SingleTarget => 1,
+            _ => 0
+        };
+    }
+
     public void TryUseBestSkill(Transform target)
     {
-        if (_skills == null || _skills.Length == 0)
+        if (_activeSkills == null || _activeSkills.Length == 0)
             return;
 
         SkillRuntime bestSkill = null;
-        var bestScore = float.MinValue;
+        var bestScore = 0f;
 
-        foreach (var skill in _skills)
+        foreach (var skill in _activeSkills)
         {
             if (!skill.IsReady)
                 continue;
@@ -61,7 +120,7 @@ public class AISkillController : MonoBehaviour
             if (_data.currentMana < skill.Data.manaCost)
                 continue;
 
-            var score = EvaluateSkill(skill, target);
+            var score = ScoreSkill(skill, target);
 
             if (score > bestScore)
             {
@@ -71,64 +130,78 @@ public class AISkillController : MonoBehaviour
         }
 
         if (bestSkill != null)
-            UseSkill(bestSkill);
+            UseSkill(bestSkill, target);
     }
 
-    private float EvaluateSkill(SkillRuntime skill, Transform target)
+    private float ScoreSkill(SkillRuntime skill, Transform target)
     {
-        var distance = Vector3.Distance(transform.position, target.position);
-
+        var data = skill.Data;
+        
         var score = 0f;
 
-        if (skill.Data.targetType == SkillTargetType.SingleTarget)
+        var distance = Vector3.Distance(transform.position, target.position);
+
+        if (distance > data.range)
+            return 0f;
+
+        if (data.targetType == SkillTargetType.Area || data.targetType == SkillTargetType.Chain)
         {
-            if (distance > skill.Data.range)
-                return -100f; // invalid
-            score += 10f;
+            var nearbyEnemies = CountEnemiesAround(target.position, data.range);
+            score += nearbyEnemies * 2f;
         }
 
-        if (skill.Data.targetType == SkillTargetType.Area)
+        if (data.targetType == SkillTargetType.SingleTarget)
         {
-            var hits = CountEnemiesInRadius(skill.Data.range);
-            score += hits * 5f; // prefer AoE when clustered
+            var nearbyEnemies = CountEnemiesAround(target.position, 3f);
+            if (nearbyEnemies <= 1)
+                score += 2f;
+        }
+
+        if (skillExecuter)
+        {
+            var healthPercent = skillExecuter.GetHealthPercent();
+            
+            if (HasEffectType(data, StatusEffectType.HealOverTime) ||
+                HasEffectType(data, StatusEffectType.DamageReduction))
+                score += (1f - healthPercent) * 5f;
+
+            score += healthPercent * 2f;
         }
         
-        // Prefer higher damage
-        score += skill.Data.damageMultiplier * 2f;
+        var manaRatio = _data.currentMana / _data.@class.maxMana;
+        score *= Mathf.Lerp(0.5f, 1.5f, manaRatio);
         
-        // Prefer cheaper skills slightly
-        score -= skill.Data.manaCost * 0.1f;
+        score += 1f / (1f + data.cooldown);
 
         return score;
     }
 
-    private int CountEnemiesInRadius(float radius)
+    private int CountEnemiesAround(Vector3 position, float radius)
     {
-        var count = Physics.OverlapSphereNonAlloc(
-            transform.position,
-            radius,
-            _overlapBuffer,
-            targetLayer
-        );
-        
-        return count;
+        return EnemyRegistry.RegisteredEnemies.Where(enemy => enemy)
+            .Count(enemy => Vector3.Distance(position, enemy.transform.position) <= radius);
     }
 
-    private void UseSkill(SkillRuntime skill)
+    private bool HasEffectType(SkillData skill, StatusEffectType type)
+    {
+        return skill.effects.Any(effect => effect.type == type);
+    }
+
+    private void UseSkill(SkillRuntime skill, Transform target)
     {
         _data.SetMana(_data.currentMana - skill.Data.manaCost);
         
         skill.Trigger();
         
-        skillExecuter.Execute(skill.Data, _data);
-
+        skillExecuter.Execute(skill.Data, _data, target);
+        
         if (_animator)
             _animator.SetTrigger(AttackHash);
     }
 
     private void TickCooldowns()
     {
-        foreach (var skill in _skills)
+        foreach (var skill in _activeSkills)
             skill.Tick(skillExecuter.AttackSpeedMultiplier * Time.deltaTime);
     }
 }

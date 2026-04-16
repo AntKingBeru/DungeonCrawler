@@ -16,6 +16,24 @@ public class PartyUIController : MonoBehaviour
     private CharacterSelectionData _player;
     private CharacterSelectionData[] _party;
 
+    private void OnEnable()
+    {
+        PartySystemEvents.OnStatsUpdated += RefreshAll;
+    }
+    
+    private void OnDisable()
+    {
+        PartySystemEvents.OnStatsUpdated -= RefreshAll;
+    }
+
+    private void RefreshAll()
+    {
+        SetupPlayer();
+        SetupParty();
+        UpdatePlayer();
+        UpdateParty();
+    }
+
     private void OnDestroy()
     {
         if (_player != null)

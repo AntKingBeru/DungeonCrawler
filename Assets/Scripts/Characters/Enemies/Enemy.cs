@@ -174,10 +174,10 @@ public class Enemy : MonoBehaviour, IDamageable
 
     private void ExecuteAttack(Transform target)
     {
-        if (!target.TryGetComponent(out IDamageable damageable))
+        if (!target.TryGetComponent(out SkillExecuter party))
             return;
         
-        damageable.TakeDamage(Data.attackDamage);
+        party.TakeDamage(Data.attackDamage);
     }
     
     #endregion

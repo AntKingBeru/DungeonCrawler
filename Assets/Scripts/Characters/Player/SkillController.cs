@@ -50,7 +50,12 @@ public class SkillController : MonoBehaviour
 
     private void BuildSkills()
     {
-        var allSkills = new List<SkillData>(_data.@class.startingSkills);
+        var allSkills = new List<SkillData>();
+        
+        allSkills.AddRange(_data.@class.startingSkills);
+        
+        if (_data.unlockedSkills != null)
+            allSkills.AddRange(_data.unlockedSkills);
         
         var active = new List<SkillData>();
         var passive = new List<SkillData>();
@@ -77,17 +82,30 @@ public class SkillController : MonoBehaviour
             };
         }
     }
+    
+    private void RebuildSkills()
+    {
+        BuildSkills();
+        
+        _hotbarUI.Initialize(_skills);
+        
+        _holdTimers = new float[_skills.Length];
+    }
 
     private void OnEnable()
     {
         foreach (var skillAction in skillActions)
             skillAction.action.Enable();
+
+        SkillSystemEvents.OnSkillsUpdated += RebuildSkills;
     }
     
     private void OnDisable()
     {
         foreach (var skillAction in skillActions)
             skillAction.action.Disable();
+        
+        SkillSystemEvents.OnSkillsUpdated -= RebuildSkills;
     }
 
     private void Update()
@@ -167,7 +185,7 @@ public class SkillController : MonoBehaviour
         _regenTimer = 0f;
         
         skill.Trigger();
-        skillExecuter.Execute(skill.Data, _data);
+        skillExecuter.Execute(skill.Data, _data, null);
         
         if (_animator)
             _animator.SetTrigger(AttackHash);
