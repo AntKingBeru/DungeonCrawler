@@ -87,6 +87,8 @@ public class GameSession : MonoBehaviour
     {
         Time.timeScale = 0f;
         
+        Cursor.visible = true;
+        
         onGameLost?.Invoke(BossesDefeated, TotalBosses);
     }
 
