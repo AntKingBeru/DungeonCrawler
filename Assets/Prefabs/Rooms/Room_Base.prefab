@@ -1655,6 +1655,7 @@ MonoBehaviour:
   isStartRoom: 0
   isBossRoom: 0
   bossIndex: 0
+  roomId: base
 --- !u!114 &8293000508695590555
 MonoBehaviour:
   m_ObjectHideFlags: 0

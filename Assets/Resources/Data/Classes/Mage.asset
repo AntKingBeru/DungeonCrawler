@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8bf4a284f3a12742966ee41915880ca, type: 3}
+  m_Name: Mage
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterClassData
+  className: Mage
+  description: 'A wielder of arcane power who devastates enemies from afar.
+
+    The
+    Mage sacrifices durability for unmatched magical damage.'
+  icon: {fileID: 95488279, guid: 193e9a99bff7587449fcf98ec5955683, type: 3}
+  maxHealth: 80
+  maxMana: 150
+  damage: 20
+  movementSpeed: 4.5
+  modelPrefab: {fileID: 9136712008629372791, guid: 51697227b6c3b4f4c9b8ec940cb3c2ca, type: 3}
+  colorVariants:
+  - {fileID: 2100000, guid: 6942a716ad39c9c4f90bdd41a7538aa6, type: 2}
+  - {fileID: 2100000, guid: e1381bc8c8dd8834581691610cada85d, type: 2}
+  - {fileID: 2100000, guid: a5d54f941af386c4581d70ac38e1b644, type: 2}
+  - {fileID: 2100000, guid: 88835c6eeec168f4090c450d2245ae9b, type: 2}
+  startingSkills:
+  - {fileID: 11400000, guid: 79a11a7fb8563454b98b223182608e0a, type: 2}
+  - {fileID: 11400000, guid: 81fa0726503502a4db5397ee9819f3d1, type: 2}
+  unlockableSkills:
+  - {fileID: 11400000, guid: 1c3d105c866a02e498ed53e6918dacea, type: 2}
+  - {fileID: 11400000, guid: f765a8646ec113643b820489b3af831b, type: 2}
+  - {fileID: 11400000, guid: 802def46f5b719444a11c9537d460a82, type: 2}
+  id: mage

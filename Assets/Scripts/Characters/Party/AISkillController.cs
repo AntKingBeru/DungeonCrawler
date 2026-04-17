@@ -169,7 +169,7 @@ public class AISkillController : MonoBehaviour
             score += healthPercent * 2f;
         }
         
-        var manaRatio = _data.currentMana / _data.@class.maxMana;
+        var manaRatio = _data.currentMana / _data.MaxMana;
         score *= Mathf.Lerp(0.5f, 1.5f, manaRatio);
         
         score += 1f / (1f + data.cooldown);

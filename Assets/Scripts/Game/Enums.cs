@@ -47,6 +47,7 @@ public enum RoomType
 public enum SceneId
 {
     MainMenu,
+    LoadSave,
     CharacterCreationPlayer,
     CharacterCreationParty,
     GameScene

@@ -24,4 +24,7 @@ public class SkillData : ScriptableObject
     public GameObject hitVFX;
 
     public StatusEffectData[] effects = Array.Empty<StatusEffectData>();
+    
+    [Header("SaveInfo")]
+    public string id;
 }

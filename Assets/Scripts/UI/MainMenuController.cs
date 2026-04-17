@@ -4,12 +4,25 @@ public class MainMenuController : MonoBehaviour
 {
     public void OnNewGame()
     {
-        SceneLoader.Instance.LoadScene(SceneId.CharacterCreationPlayer);
+        if (SaveSystem.HasFreeSlot())
+        {
+            var slot = SaveSystem.GetFirstEmptySlot();
+            
+            GameSession.Instance.StartNewRun(slot);
+            
+            SceneLoader.Instance.LoadScene(SceneId.CharacterCreationPlayer);
+        }
+        else
+        {
+            LoadSaveUI.ReplaceMode = true;
+            
+            SceneLoader.Instance.LoadScene(SceneId.LoadSave);
+        }
     }
 
     public void OnContinue()
     {
-        // TODO: Implement Continue
+        SceneLoader.Instance.LoadScene(SceneId.LoadSave);
     }
 
     public void OnSettings()

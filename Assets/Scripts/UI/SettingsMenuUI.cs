@@ -67,6 +67,12 @@ public class SettingsMenuUI : MonoBehaviour
         
         CursorManager.Instance.UpdateCursorState(_isOpen);
     }
+
+    public void Exit()
+    {
+        SceneLoader.Instance.LoadScene(SceneId.MainMenu);
+        Close();
+    }
     
     private void UpdateSensitivityText(float value)
     {

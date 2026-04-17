@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98bfbcac449bc9f46bcd24ffa6041234, type: 3}
+  m_Name: ThornArmor
+  m_EditorClassIdentifier: Assembly-CSharp::SkillData
+  skillName: Thorn Armor
+  description: Wrap yourself or an ally in thorny vines, reducing incoming damage
+    and reflecting a portion back to attackers.
+  icon: {fileID: 1490103260, guid: 931927bbe0f21ec41bef5085c6ddd11d, type: 3}
+  type: 0
+  targetType: 0
+  cooldown: 12
+  manaCost: 20
+  damageMultiplier: 0
+  range: 0
+  radius: 0
+  lineWidth: 0
+  maxTargets: 0
+  castVFX: {fileID: 0}
+  hitVFX: {fileID: 0}
+  effects:
+  - {fileID: 11400000, guid: f1e03994dda55434bbe686609ac1c77c, type: 2}
+  - {fileID: 11400000, guid: 1a8d9f9a3782dc84d83aa2d1c95e838e, type: 2}
+  id: thornArmor

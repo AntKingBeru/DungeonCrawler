@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System;
 using System.Collections;
 
 public class RewardChest : MonoBehaviour
@@ -16,6 +17,8 @@ public class RewardChest : MonoBehaviour
     private RewardData _reward;
     private bool _isOpened;
     private bool _playerInside;
+    
+    public event Action<RewardChest> OnOpened;
 
     public void Initialize(RewardData reward)
     {
@@ -40,9 +43,14 @@ public class RewardChest : MonoBehaviour
 
     private void Open()
     {
+        if (!_isOpened)
+            return;
+        
         _isOpened = true;
 
         PartyRewardApplier.ApplyReward(_reward);
+        
+        OnOpened?.Invoke(this);
 
         StartCoroutine(OpenLidRoutine());
     }

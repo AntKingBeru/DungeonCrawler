@@ -39,11 +39,11 @@ public static class PartyRewardApplier
 
     private static void ApplyStatBoost(CharacterSelectionData character, RewardData reward)
     {
-        character.@class.maxHealth += reward.healthBonus;
-        character.@class.maxMana += reward.manaBonus;
-        character.@class.damage += reward.damageBonus;
+        character.bonusMaxHealth += reward.healthBonus;
+        character.bonusMaxMana += reward.manaBonus;
+        character.bonusDamage += reward.damageBonus;
         
-        character.SetHealth(character.@class.maxHealth);
-        character.SetMana(character.@class.maxMana);
+        character.SetHealth(character.MaxHealth);
+        character.SetMana(character.MaxMana);
     }
 }

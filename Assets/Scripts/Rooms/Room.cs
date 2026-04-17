@@ -18,6 +18,9 @@ public class Room : MonoBehaviour
     [SerializeField] private bool isBossRoom;
     [SerializeField] private int bossIndex; // 0, 1 for mini bosses
     
+    [Header("SaveInfo")]
+    public string roomId;
+    
     private bool _isActive;
     private bool _encounterCompleted;
     

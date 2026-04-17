@@ -21,4 +21,7 @@ public class CharacterClassData : ScriptableObject
     [Header("Skills")]
     public SkillData[] startingSkills;
     public SkillData[] unlockableSkills;
+    
+    [Header("SaveInfo")]
+    public string id;
 }

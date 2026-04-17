@@ -58,6 +58,9 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 8273241697500751206, guid: 0eb0525df28d6e74c8e0ff312c28de5e, type: 3}
+      insertIndex: 2
+      addedObject: {fileID: -8788844408731680522}
+    - targetCorrespondingSourceObject: {fileID: 8273241697500751206, guid: 0eb0525df28d6e74c8e0ff312c28de5e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 434931513523913364}
     - targetCorrespondingSourceObject: {fileID: 8273241697500751206, guid: 0eb0525df28d6e74c8e0ff312c28de5e, type: 3}
@@ -72,6 +75,28 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8273241697500751206, guid: 0eb0525df28d6e74c8e0ff312c28de5e, type: 3}
   m_PrefabInstance: {fileID: 8576470668296511880}
   m_PrefabAsset: {fileID: 0}
+--- !u!195 &-8788844408731680522
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 420466287897314542}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!114 &434931513523913364
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -104,6 +129,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PartyCombatController
   controller: {fileID: 6482135328470273678}
+  agent: {fileID: -8788844408731680522}
   follower: {fileID: 434931513523913364}
   skillController: {fileID: 5065046670168482810}
   skillExecuter: {fileID: 9045020377421263630}

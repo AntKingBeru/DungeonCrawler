@@ -62,8 +62,8 @@ public class PartyUIController : MonoBehaviour
         playerIcon.sprite = _player.@class.icon;
         playerName.text = _player.name;
 
-        playerHealth.maxValue = _player.@class.maxHealth;
-        playerMana.maxValue = _player.@class.maxMana;
+        playerHealth.maxValue = _player.MaxHealth;
+        playerMana.maxValue = _player.MaxMana;
 
         _player.OnHealthChanged += OnPlayerHealthChanged;
         _player.OnManaChanged += OnPlayerManaChanged;

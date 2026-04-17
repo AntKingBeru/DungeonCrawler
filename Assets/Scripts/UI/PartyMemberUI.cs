@@ -27,8 +27,8 @@ public class PartyMemberUI : MonoBehaviour
         icon.sprite = data.@class.icon;
         nameText.text = data.@class.className;
 
-        health.maxValue = data.@class.maxHealth;
-        mana.maxValue = data.@class.maxMana;
+        health.maxValue = data.MaxHealth;
+        mana.maxValue = data.MaxMana;
 
         _data.OnHealthChanged += OnHealthChanged;
         _data.OnManaChanged += OnManaChanged;

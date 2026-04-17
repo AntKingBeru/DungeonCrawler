@@ -166,11 +166,11 @@ public class SkillController : MonoBehaviour
         if (_regenTimer < manaRegenDelay)
             return;
 
-        if (_data.currentMana >= _data.@class.maxMana)
+        if (_data.currentMana >= _data.MaxMana)
             return;
         
         _data.SetMana(_data.currentMana + manaRegenPerSecond * Time.deltaTime);
-        _data.SetMana(Mathf.Min(_data.currentMana, _data.@class.maxMana));
+        _data.SetMana(Mathf.Min(_data.currentMana, _data.MaxMana));
     }
     
     public void TryUseSkill(int index)

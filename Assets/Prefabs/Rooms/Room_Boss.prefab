@@ -1014,6 +1014,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: -2
       objectReference: {fileID: 0}
+    - target: {fileID: 6453245480877199418, guid: b0c031925b6418843a13a6a9cdf93cb1, type: 3}
+      propertyPath: roomId
+      value: boss
+      objectReference: {fileID: 0}
     - target: {fileID: 8052883093312429433, guid: b0c031925b6418843a13a6a9cdf93cb1, type: 3}
       propertyPath: m_Name
       value: Room_Boss

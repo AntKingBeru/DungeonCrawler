@@ -57,7 +57,7 @@ public class SkillExecuter : MonoBehaviour, IDamageable
         _data = data;
         _animator = animator;
 
-        _currentHealth = data.@class.maxHealth;
+        _currentHealth = data.MaxHealth;
     }
 
     private void OnEnable()
@@ -217,13 +217,13 @@ public class SkillExecuter : MonoBehaviour, IDamageable
         if (_data == null || !_data.@class)
             return 1f;
 
-        return _currentHealth / _data.@class.maxHealth;
+        return _currentHealth / _data.MaxHealth;
     }
 
     private void Heal(float amount)
     {
         _currentHealth += amount;
-        _currentHealth = Mathf.Min(_currentHealth, _data.@class.maxHealth);
+        _currentHealth = Mathf.Min(_currentHealth, _data.MaxHealth);
     }
 
     private void Die()
@@ -243,7 +243,7 @@ public class SkillExecuter : MonoBehaviour, IDamageable
 
     public float CalculateDamage(SkillData skill, Transform target)
     {
-        var baseDamage = _data.@class.damage * skill.damageMultiplier;
+        var baseDamage = _data.Damage * skill.damageMultiplier;
 
         var final = baseDamage * _damageMultiplier;
 

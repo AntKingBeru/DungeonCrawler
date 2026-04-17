@@ -564,6 +564,7 @@ MonoBehaviour:
   isStartRoom: 0
   isBossRoom: 0
   bossIndex: 0
+  roomId: reward
   chestSpawnPoints:
   - {fileID: 5956201902477008859}
   - {fileID: 7105470763285046676}

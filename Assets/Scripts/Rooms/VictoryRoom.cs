@@ -25,6 +25,6 @@ public class VictoryRoom : Room
         if (victoryVFX)
             Instantiate(victoryVFX, centerPoint.position, Quaternion.identity);
         
-        // TODO: show victory screen
+        GameSession.Instance.onGameWon?.Invoke();
     }
 }

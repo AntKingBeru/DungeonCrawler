@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8bf4a284f3a12742966ee41915880ca, type: 3}
+  m_Name: Ranger
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterClassData
+  className: Ranger
+  description: 'A precise hunter who strikes from a distance.
+
+    The Ranger excels
+    at sustained damage and mobility, keeping enemies at bay.'
+  icon: {fileID: -55892845, guid: 193e9a99bff7587449fcf98ec5955683, type: 3}
+  maxHealth: 100
+  maxMana: 60
+  damage: 15
+  movementSpeed: 5.5
+  modelPrefab: {fileID: 9217550420224965628, guid: 98167d2c045588c41bf0e373581fcaf5, type: 3}
+  colorVariants:
+  - {fileID: 2100000, guid: 66e256d43d2d0e144bfdfcdf629f1ccf, type: 2}
+  - {fileID: 2100000, guid: 8cb61a317dc91384facd37cf07402eec, type: 2}
+  - {fileID: 2100000, guid: fffb306bd33a0814ba0629dd39fbcbf4, type: 2}
+  - {fileID: 2100000, guid: cd85bf3f7399a75479ab0ac01a6791a8, type: 2}
+  startingSkills:
+  - {fileID: 11400000, guid: f91dd0b1c2819a54b975fb8dfbaee5fd, type: 2}
+  - {fileID: 11400000, guid: 5d369870b9b0686478260774f0102e11, type: 2}
+  unlockableSkills:
+  - {fileID: 11400000, guid: b225a7dcebd1a634d9dc4105a69763eb, type: 2}
+  - {fileID: 11400000, guid: 8ffd007670461a9499db25f85bc310be, type: 2}
+  - {fileID: 11400000, guid: 966dffc129dfc564d81a0eb702ca3f91, type: 2}
+  id: ranger

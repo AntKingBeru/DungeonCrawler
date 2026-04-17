@@ -195,7 +195,7 @@ public class PartyCombatController : MonoBehaviour
         if (_data == null)
             return false;
         
-        var hpPercent = _data.currentHealth / _data.@class.maxHealth;
+        var hpPercent = _data.currentHealth / _data.MaxHealth;
         return hpPercent < lowHealthThreshold;
     }
 
