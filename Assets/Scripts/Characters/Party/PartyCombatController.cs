@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 using System.Collections.Generic;
 
 public class PartyCombatController : MonoBehaviour
@@ -6,6 +7,7 @@ public class PartyCombatController : MonoBehaviour
     #region References
     
     [SerializeField] private CharacterController controller;
+    [SerializeField] private NavMeshAgent agent;
     [SerializeField] private PartyFollower follower;
     [SerializeField] private AISkillController skillController;
     [SerializeField] private SkillExecuter skillExecuter;
@@ -52,6 +54,8 @@ public class PartyCombatController : MonoBehaviour
 
     private readonly Dictionary<Enemy, float> _threatTable = new();
     
+    private float _verticalVelocity;
+    
     #endregion
     
     #region Initialize
@@ -60,6 +64,16 @@ public class PartyCombatController : MonoBehaviour
     {
         _data = data;
         skillController.Initialize(data, animator);
+        skillExecuter.Initialize(data, animator);
+    }
+
+    private void Awake()
+    {
+        if (agent)
+        {
+            agent.updatePosition = false;
+            agent.updateRotation = false;
+        }
     }
     
     #endregion
@@ -70,6 +84,9 @@ public class PartyCombatController : MonoBehaviour
     {
         HandleTargeting();
         HandleState();
+        
+        if (agent && agent.enabled)
+            agent.nextPosition = transform.position;
     }
     
     #endregion
@@ -151,8 +168,7 @@ public class PartyCombatController : MonoBehaviour
         if (!_target)
             return;
 
-        var direction = _target.position - transform.position;
-        var distance = direction.magnitude;
+        var distance = Vector3.Distance(transform.position, _target.position);
 
         if (ShouldRetreat())
         {
@@ -162,12 +178,13 @@ public class PartyCombatController : MonoBehaviour
 
         if (distance > attackRange)
         {
-            Move(direction.normalized);
+            MoveToTarget();
             HandleStuck();
         }
         else
         {
-            FaceTarget(direction);
+            StopAgent();
+            FaceTarget(_target.position - transform.position);
             TryAttack();
             _stuckTimer = 0f;
         }
@@ -196,9 +213,26 @@ public class PartyCombatController : MonoBehaviour
     
     #region Movement
 
-    private void Move(Vector3 direction)
+    private void MoveToTarget()
     {
+        if (!agent || !agent.enabled || !agent.isOnNavMesh || !_target)
+            return;
+        
         if (skillExecuter && skillExecuter.IsRooted())
+            return;
+        
+        agent.isStopped = false;
+        agent.SetDestination(_target.position);
+
+        if (agent.pathStatus == NavMeshPathStatus.PathPartial)
+        {
+            follower.TeleportToFormation();
+            return;
+        }
+        
+        var desired = agent.desiredVelocity;
+
+        if (desired.sqrMagnitude < 0.01f)
             return;
         
         var speed = combatMoveSpeed;
@@ -206,10 +240,29 @@ public class PartyCombatController : MonoBehaviour
         if (skillExecuter)
             speed *= skillExecuter.GetMoveSpeedMultiplier();
         
-        var velocity = direction * speed;
+        var velocity = desired.normalized * speed;
+        
+        ApplyGravity(ref velocity);
+        
         controller.Move(velocity * Time.deltaTime);
         
-        FaceTarget(direction);
+        FaceTarget(desired);
+    }
+
+    private void StopAgent()
+    {
+        if (agent && agent.enabled && agent.isOnNavMesh)
+            agent.isStopped = true;
+    }
+
+    private void ApplyGravity(ref Vector3 velocity)
+    {
+        if (controller.isGrounded && _verticalVelocity < 0f)
+            _verticalVelocity = -2f;
+        else
+            _verticalVelocity += Physics.gravity.y * Time.deltaTime;
+        
+        velocity.y = _verticalVelocity;
     }
 
     private void FaceTarget(Vector3 direction)

@@ -17,6 +17,7 @@ public class GameSession : MonoBehaviour
 
     public UnityEvent onDataUpdated;
     public UnityEvent onBossProgressUpdated;
+    public UnityEvent<int, int> onGameLost;
 
     private void Awake()
     {
@@ -62,5 +63,12 @@ public class GameSession : MonoBehaviour
     {
         BossesDefeated++;
         onBossProgressUpdated?.Invoke();
+    }
+
+    public void HandlePlayerDeath()
+    {
+        Time.timeScale = 0f;
+        
+        onGameLost?.Invoke(BossesDefeated, TotalBosses);
     }
 }

@@ -34,6 +34,9 @@ public class PlayerCameraController : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (!_target)
+            return;
+        
         var input = lookAction.action.ReadValue<Vector2>();
         
         var sensitivity = SettingsManager.Instance.MouseSensitivity;

@@ -9,6 +9,7 @@ public class EnemyData : ScriptableObject
     
     [Header("Prefab")]
     public Enemy enemyPrefab;
+    public bool isBoss;
     
     [Header("Stats")]
     public float maxHealth;

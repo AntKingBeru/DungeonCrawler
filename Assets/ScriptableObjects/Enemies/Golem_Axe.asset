@@ -15,6 +15,7 @@ MonoBehaviour:
   enemyName: Golem
   type: 1
   enemyPrefab: {fileID: 650595465655641336, guid: 9471691b8e8bc3f4b90c2e6da11719cf, type: 3}
+  isBoss: 1
   maxHealth: 300
   moveSpeed: 2.2
   canSummon: 0

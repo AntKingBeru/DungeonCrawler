@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Game/Skill")]
@@ -22,5 +23,5 @@ public class SkillData : ScriptableObject
     public GameObject castVFX;
     public GameObject hitVFX;
 
-    public StatusEffectData[] effects;
+    public StatusEffectData[] effects = Array.Empty<StatusEffectData>();
 }

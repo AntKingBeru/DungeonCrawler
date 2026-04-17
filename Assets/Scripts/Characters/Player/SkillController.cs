@@ -41,6 +41,8 @@ public class SkillController : MonoBehaviour
         _hotbarUI = hotbar;
         _animator = animator;
         
+        skillExecuter.Initialize(data, animator);
+        
         BuildSkills();
 
         _hotbarUI.Initialize(_skills);

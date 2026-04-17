@@ -104,7 +104,7 @@ public class Enemy : MonoBehaviour, IDamageable
         
         AttackTimer -= Time.deltaTime;
         
-        var currentTarget = ForcedTarget ? ForcedTarget : Target;
+        var currentTarget = ForcedTarget ? ForcedTarget : GetBestTarget();
 
         if (!currentTarget)
             return;
@@ -117,6 +117,28 @@ public class Enemy : MonoBehaviour, IDamageable
             MoveTo(currentTarget);
         
         UpdateAnimation();
+    }
+
+    protected Transform GetBestTarget()
+    {
+        SkillExecuter best = null;
+        var bestDist = float.MaxValue;
+
+        foreach (var member in PartyRegistry.Registered)
+        {
+            if (!member || member.IsUntargetable())
+                continue;
+            
+            var dist = Vector3.Distance(transform.position, member.transform.position);
+            
+            if (dist < bestDist)
+            {
+                bestDist = dist;
+                best = member;
+            }
+        }
+        
+        return best ? best.transform : null;
     }
 
     protected virtual void UpdateAnimation()
@@ -245,8 +267,11 @@ public class Enemy : MonoBehaviour, IDamageable
             Die();
     }
 
-    private void Die()
+    protected virtual void Die()
     {
+        if (Data.isBoss)
+            GameSession.Instance.RegisterBossKill();
+        
         onDeath?.Invoke(this);
         animator.SetTrigger(DieHash);
         Destroy(gameObject, 2f);

@@ -6,6 +6,7 @@ public class SkillExecuter : MonoBehaviour, IDamageable
 {
     private static readonly int HitHash = Animator.StringToHash("Hit");
     private static readonly int DieHash = Animator.StringToHash("Die");
+    private const string PlayerTag = "Player";
     
     [SerializeField] private CharacterController controller;
     [SerializeField] private Transform castPoint;
@@ -57,6 +58,16 @@ public class SkillExecuter : MonoBehaviour, IDamageable
         _animator = animator;
 
         _currentHealth = data.@class.maxHealth;
+    }
+
+    private void OnEnable()
+    {
+        PartyRegistry.Register(this);
+    }
+
+    private void OnDisable()
+    {
+        PartyRegistry.Unregister(this);
     }
     
     #endregion
@@ -201,7 +212,13 @@ public class SkillExecuter : MonoBehaviour, IDamageable
         }
     }
 
-    public float GetHealthPercent() => _currentHealth / _data.@class.maxHealth;
+    public float GetHealthPercent()
+    {
+        if (_data == null || !_data.@class)
+            return 1f;
+
+        return _currentHealth / _data.@class.maxHealth;
+    }
 
     private void Heal(float amount)
     {
@@ -213,6 +230,9 @@ public class SkillExecuter : MonoBehaviour, IDamageable
     {
         if (_animator)
             _animator.SetTrigger(DieHash);
+
+        if (CompareTag(PlayerTag))
+            GameSession.Instance?.HandlePlayerDeath();
         
         Destroy(gameObject, 2f);
     }
@@ -384,6 +404,9 @@ public class SkillExecuter : MonoBehaviour, IDamageable
 
     private void ApplyHit(SkillData skill, IDamageable target, Vector3 hitPoint, Transform targetTransform)
     {
+        if (!targetTransform)
+            return;
+        
         var damage = CalculateDamage(skill, targetTransform);
         
         target.TakeDamage(damage);
@@ -391,8 +414,14 @@ public class SkillExecuter : MonoBehaviour, IDamageable
         if (skill.hitVFX)
             Instantiate(skill.hitVFX, hitPoint, Quaternion.identity);
 
+        if (skill.effects == null || skill.effects.Length == 0)
+            return;
+
         foreach (var effect in skill.effects)
         {
+            if (!effect)
+                continue;
+            
             switch (target)
             {
                 case SkillExecuter exec:
